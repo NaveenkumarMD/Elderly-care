@@ -23,12 +23,7 @@ class Elderabout extends Component {
         return (
             <View style={styles.container}>
                 <StatusBar style="auto"/>
-                <View>
-                    <TouchableOpacity style={{flexDirection:'row',marginTop:40}} onPress={()=>this.props.navigation.openDrawer()} >
-                         <Entypo name="menu" size={24} color="white"   />
-                         <Text style={{fontSize:24,color:'white',paddingLeft:10}}>About</Text>
-                    </TouchableOpacity>
-                </View>
+
                 <View style={styles.one}>
                     <View style={{flexDirection:'row',justifyContent:'space-around',marginTop:10,padding:5}}>
                         <View style={{flex:1}}>
@@ -112,12 +107,14 @@ const styles=StyleSheet.create({
         borderBottomWidth:2
     },
     two:{
-        height:60,
+        height:90,
         borderBottomColor:'#28292b',
-        borderBottomWidth:2        
+        borderBottomWidth:2 ,
+        justifyContent:'center'       
     },
     three:{
-        height:50,
+        height:70,
+        justifyContent:'center',
         borderBottomColor:'#28292b',
         borderBottomWidth:2,
         padding:10   

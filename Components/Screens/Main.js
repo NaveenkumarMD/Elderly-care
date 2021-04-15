@@ -3,6 +3,8 @@ import { View, Text, StyleSheet, StatusBar, TouchableOpacity, TouchableHighlight
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Ionicons, Entypo, FontAwesome, FontAwesome5, MaterialCommunityIcons, MaterialIcons ,Fontisto} from '@expo/vector-icons'
 import { Badge, Icon } from 'react-native-elements'
+import * as Location from 'expo-location'
+import firebase from 'firebase'
 var screen = Dimensions.get('screen')
 var width = screen.width
 class Main extends Component {
@@ -13,18 +15,72 @@ class Main extends Component {
                 'name': 'naveenkumar',
                 'mobile': 8870499146
             },
-            role: ''
+            role: '',
+            street:'',
+            place:'',
+            pincode:'',
+            district:'',
+            city:''
         }
     }
-    componentDidMount() {
-        const userdata = AsyncStorage.getItem('userdata').then(data => {
+    findlocation=async ()=>{
+        let { status } = await Location.requestPermissionsAsync();
+        if (status !== 'granted') {
+          alert("Location access denied")
+          this.setState({errormessage:"Permission not granted"})
+          return;
+        }
+        let location = await Location.getCurrentPositionAsync({});
+        this.setState({location:location.coords})
+        console.log(location.coords)
+        let coordinates={
+            latitude:location.coords.latitude, 
+            longitude:location.coords.longitude,
+        }
+        Location.reverseGeocodeAsync(coordinates).then(data=>{
+            let object=data[0]
+            console.log(data[0])
+            this.setState({
+               street:object.street,
+               place:object.name,
+               district:object.subregion,
+               pincode:object.postalCode ,
+               city:object.city
+            })
+            firebase.firestore().collection('Elders').doc(this.state.userdata.mobile).set({
+                street:object.street,
+                place:object.name,
+                district:object.subregion,
+                pincode:object.postalCode ,
+                city:object.city,
+                latitude:coordinates.latitude,
+                longitude:coordinates.longitude
+            },{merge:true}).then((res)=>{
+                console.log("success")
+            }).catch((err)=>{
+                alert(err.message)
+            })
+            
+        })
+    }
+
+    async componentDidMount() {
+        
+        const userdata = await AsyncStorage.getItem('userdata').then(data => {
             console.log(JSON.parse(data))
             this.setState({userdata:JSON.parse(data)})
         })
-        const role = AsyncStorage.getItem('role').then(data => {
+        const role = await AsyncStorage.getItem('role').then(data => {
             console.log(data)
             this.setState({ role: data })
         })
+        this.findlocation()
+        const token=await AsyncStorage.getItem('token').then(token=>{
+            firebase.firestore().collection('Elders').doc(this.state.userdata.mobile).set({token:token},{merge:true}).then(res=>{
+                console.log("saved token",token)
+            })
+        })
+        
 
     }
     render() {
@@ -35,7 +91,7 @@ class Main extends Component {
                     <View style={styles.oval1}></View>
                     <View style={styles.oval2}></View>
                     <TouchableOpacity style={{ flexDirection: 'row', marginTop: 35, padding: 20, justifyContent: 'space-around' }}>
-                        <Entypo name="menu" size={24} color="white" style={{ flex: 1 }} onPress={() => this.props.navigation.openDrawer()} />
+                        <Entypo name="menu" size={24} color="white" style={{ flex: 1 }}  />
                         <View>
                             <Ionicons name="notifications" size={24} color="white" />
                             <Badge status="warning" containerStyle={{ position: 'absolute', top: -4, right: -4 }} />
@@ -63,10 +119,10 @@ class Main extends Component {
                                     <Fontisto name="favorite" size={24} color="white" />
                                     <Text style={{ color: 'white' }}>Favourites</Text>
                                 </View>
-                                <View style={{ alignItems: 'center' }}>
+                                <TouchableOpacity style={{ alignItems: 'center' }} onPress={()=>this.props.navigation.navigate('Profile')}>
                                     <Entypo name="info-with-circle" size={24} color="white" />
                                     <Text style={{ color: 'white' }}>About</Text>
-                                </View>
+                                </TouchableOpacity>
                             </View>
                         </View>
                     </View>
@@ -75,7 +131,7 @@ class Main extends Component {
                 <View style={styles.two}>
                     <View style={{ flexDirection: 'row', paddingHorizontal: 10, justifyContent: 'space-around' }}>
                         <ScrollView>
-                            <TouchableOpacity style={{ flexDirection: 'row', paddingTop: 20 }}>
+                            <TouchableOpacity style={{ flexDirection: 'row', paddingTop: 20 }} onPress={()=>this.props.navigation.navigate('EssentialsFindhelper')}>
                                 <View style={{ height: 50, width: 50, backgroundColor: 'red', borderRadius: 50, justifyContent: 'center', alignItems: 'center' }}>
                                     <MaterialIcons name="local-grocery-store" size={24} color="white" />
                                 </View>

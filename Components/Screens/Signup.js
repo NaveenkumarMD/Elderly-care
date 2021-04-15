@@ -40,7 +40,9 @@ class Signup extends Component {
                 relation:'',
                 password:'',
                 confirmpass:'',
-                loading:false
+                loading:false,
+                latitude:'',
+                longitude:''
             }
     }
     
@@ -87,6 +89,8 @@ class Signup extends Component {
                             relation:this.state.relation,
                             guardianlocation:this.state.guardianlocation,
                             guardiandistrict:this.state.guardiandistrict,
+                            latitude:this.state.latitude,
+                            longitude:this.state.longitude
                             
                         }).then(res=>{
                             this.setState({loading:false})
@@ -125,7 +129,9 @@ class Signup extends Component {
                place:object.name,
                district:object.subregion,
                pincode:object.postalCode ,
-               city:object.city
+               city:object.city,
+               latitude:coordinates.latitude,
+               longitude:coordinates.longitude
             })
             
         })

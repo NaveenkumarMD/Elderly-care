@@ -19,7 +19,8 @@ class Helpersignup extends Component {
             mobile:'',
             email:'',
             aadhar:'',
-            loading:false
+            loading:false,
+            latitude:'',longitude:''
         }
     }
     handlelogin=()=>{
@@ -44,9 +45,12 @@ class Helpersignup extends Component {
                         name:this.state.name,
                         mobile:this.state.mobile,
                         email:this.state.email,
-                        aadhar:this.state.aadhar
+                        aadhar:this.state.aadhar,
+                        latitude:this.state.latitude,
+                        longitude:this.state.longitude
                     }).then(data=>{
                         this.showToastWithGravityAndOffset()
+                        this.props.navigation.navigate('Helpermain')
                     }).catch(err=>{
                         alert(err.message)
                         this.setState({loading:false})
@@ -91,7 +95,9 @@ class Helpersignup extends Component {
                place:object.name,
                district:object.subregion,
                pincode:object.postalCode ,
-               city:object.city
+               city:object.city,
+               latitude:coordinates.latitude,
+               longitude:coordinates.longitude
             })
             
         })
