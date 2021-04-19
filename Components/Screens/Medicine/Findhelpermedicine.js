@@ -8,7 +8,7 @@ import { Rating } from 'react-native-elements'
 import Spinner from 'react-native-loading-spinner-overlay'
 import { sendPushNotification } from '../../../App'
 import {AntDesign} from '@expo/vector-icons'
-class Findhelperessential extends Component {
+class Findhelpermedicine extends Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -22,9 +22,9 @@ class Findhelperessential extends Component {
     notify = async () => {
        
         this.state.token.forEach(async data => {
-            await sendPushNotification(data, { title: 'Essentials', body: `${this.state.userdata.name} is asking a help to buy him some essentials could you please help him` })
+            await sendPushNotification(data, { title: 'Medicine', body: `${this.state.userdata.name} is asking a help to buy him some Medicines could you please help him` })
         })
-        elder = this.state.userdata
+        var elder = this.state.userdata
         var ref = new Date()
         var date = ref.getDate() + "/" + ref.getMonth() + "/" + ref.getFullYear()
         //console.log(date)
@@ -34,7 +34,7 @@ class Findhelperessential extends Component {
         this.state.helpersid.forEach(data => {
             reqpeople[data] = false
         })
-        firebase.firestore().collection('Essentials').add({
+        firebase.firestore().collection('Medicine').add({
             Eldername: elder.name,
             Elderid: elder.mobile,
             Daterequested: date,
@@ -47,7 +47,8 @@ class Findhelperessential extends Component {
                 Completed: false
             },
             products: this.state.products,
-            payment: 200
+            payment: 200,
+            imageurl:this.state.url
         }).then(docRef => {
             firebase.firestore().collection('Elders').doc(this.state.userdata.mobile).set({
                 currentessentialsid: docRef.id
@@ -61,12 +62,12 @@ class Findhelperessential extends Component {
     }
     async componentDidMount() {
         console.log(this.props.route.params.data)
-        this.setState({ products: this.props.route.params.data })
+        this.setState({ products: this.props.route.params.data.products,url:this.props.route.params.data.url })
         await AsyncStorage.getItem('userdata').then(data => {
             this.setState({ userdata: JSON.parse(data) })
             //console.log(JSON.parse(data))
         })
-        await firebase.firestore().collection('Helpers').where('interested', 'array-contains', 'Essentials').get().then(query => {
+        await firebase.firestore().collection('Helpers').where('interested', 'array-contains', 'Medicine').get().then(query => {
             var arr = []
             var tokenarray = []
             var helpersid = []
@@ -93,7 +94,7 @@ class Findhelperessential extends Component {
             <TouchableOpacity style={styles.item} onPress={() => this.handleviewhelper(mobile)}>
                 <View >
                     <Text style={styles.title}>{title}</Text>
-                    <Text style={{ color: '#ff7e07' }}>{distance} km</Text>
+                    <Text style={{ color: 'indigo' }}>{distance} km</Text>
                 </View>
                 <Rating type='star' ratingCount={5} startingValue={rating} imageSize={20} showRating readonly tintColor="black" ratingColor="red" showRating={false} />
 
@@ -115,7 +116,7 @@ class Findhelperessential extends Component {
                         this.setState({
                             modalVisible:false
                         })
-                        this.props.navigation.navigate('Essentialslanding')
+                        this.props.navigation.navigate('Medicinelanding')
                         
                     }}>
                         <View style={styles.modalicon}>
@@ -133,7 +134,7 @@ class Findhelperessential extends Component {
                     <Text style={{ color: 'white', alignSelf: 'center' }}></Text>
                 </View>
                 <View>
-                    <TouchableOpacity style={{ backgroundColor: '#ff7e07', alignItems: 'center', padding: 10 }} onPress={() => this.notify()}>
+                    <TouchableOpacity style={{ backgroundColor: 'indigo', alignItems: 'center', padding: 10 }} onPress={() => this.notify()}>
                         <Text style={{ color: 'white', fontSize: 20 }}>Request</Text>
                     </TouchableOpacity>
                 </View>
@@ -141,7 +142,7 @@ class Findhelperessential extends Component {
         )
     }
 }
-export default Findhelperessential
+export default Findhelpermedicine
 const styles = StyleSheet.create({
     modal:{
         

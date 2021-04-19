@@ -131,7 +131,7 @@ class Main extends Component {
                 <View style={styles.two}>
                     <View style={{ flexDirection: 'row', paddingHorizontal: 10, justifyContent: 'space-around' }}>
                         <ScrollView>
-                            <TouchableOpacity style={{ flexDirection: 'row', paddingTop: 20 }} onPress={()=>this.props.navigation.navigate('EssentialsFindhelper')}>
+                            <TouchableOpacity style={{ flexDirection: 'row', paddingTop: 20 }} onPress={()=>this.props.navigation.navigate('Essentialslanding')}>
                                 <View style={{ height: 50, width: 50, backgroundColor: 'red', borderRadius: 50, justifyContent: 'center', alignItems: 'center' }}>
                                     <MaterialIcons name="local-grocery-store" size={24} color="white" />
                                 </View>
@@ -150,8 +150,8 @@ class Main extends Component {
                                 <Text style={{ color: 'white', fontSize: 22, paddingVertical: 10, paddingHorizontal: 10 }}>Counselling</Text>
                             </TouchableOpacity >
 
-                            <TouchableOpacity  style={{ flexDirection: 'row', paddingTop: 20 }}>
-                                <View style={{ height: 50, width: 50, backgroundColor: 'indigo', borderRadius: 50, justifyContent: 'center', alignItems: 'center' }}>
+                            <TouchableOpacity  style={{ flexDirection: 'row', paddingTop: 20 }} onPress={()=>this.props.navigation.navigate('Medicinelanding')}>
+                                <View style={{ height: 50, width: 50, backgroundColor: 'indigo', borderRadius: 50, justifyContent: 'center', alignItems: 'center' }} >
                                     <FontAwesome5 name="notes-medical" size={24} color="white" />
                                 </View>
                                 <Text style={{ color: 'white', fontSize: 22, paddingVertical: 10, paddingHorizontal: 10 }}>Medicine</Text>

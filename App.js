@@ -62,13 +62,13 @@ class App extends React.Component{
 
 export default App
 
-export  async function sendPushNotification(expoPushToken) {
+export  async function sendPushNotification(expoPushToken,{title,body}) {
   const message = {
     to: expoPushToken,
     sound: 'default',
-    title: 'A help',
-    body: 'He is asking help',
-    data: { someData: 'goes here' },
+    title: title,
+    body: body,
+    data: { someData: 'some data' },
   };
 
   await fetch('https://exp.host/--/api/v2/push/send', {

@@ -3,6 +3,21 @@ import { StyleSheet, Text, View ,TouchableOpacity} from 'react-native'
 import { FontAwesome5 } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 class Elderorhelper extends Component {
+    constructor(props){
+        super(props)
+        
+    }
+    componentDidMount=async()=>{
+        try {
+            await AsyncStorage.getItem('role').then(role=>{
+                if(role!=undefined && role!=null){
+                    this.props.navigation.navigate('Login')
+                }
+            })
+        } catch (error) {
+            console.log(error)
+        }
+    }
     render() {
         return (
             <View style={styles.container}>

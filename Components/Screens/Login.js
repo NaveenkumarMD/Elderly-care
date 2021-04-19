@@ -59,17 +59,39 @@ class Login extends Component {
           50
         );
         if(this.state.role=='Elders'){
-            alert("send")
+            //alert("send")
             this.props.navigation.navigate('Main')
+        }
+        else{
+            this.props.navigation.navigate('Helpermain')
         }
       };
     async componentDidMount(){
         let role=await AsyncStorage.getItem('role')
         if(role=='Elder'){
-            this.setState({role:'Elders'})
+            await this.setState({role:'Elders'})
         }
-        else{
-            this.setState({role:'Helpers'})
+        if(role=='Helper'){
+            await this.setState({role:'Helpers'})
+        }
+        if(role==null){
+            this.props.navigation.navigate('Elderorhelper')
+        }
+        try {
+            await AsyncStorage.getItem('userdata').then(data=>{
+                var jsondata=JSON.parse(data)
+                if(jsondata!=undefined && jsondata!=null){
+                    if(role=='Elder' && jsondata.blood){
+                        this.props.navigation.navigate('Main')
+                    }
+                    if(role=='Helper' && jsondata.aadhar){
+                        this.props.navigation.navigate('Helpermain')
+                    }
+
+                }
+            })
+        } catch (error) {
+            
         }
     }
     render() {

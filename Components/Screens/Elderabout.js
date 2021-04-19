@@ -17,6 +17,10 @@ class Elderabout extends Component {
             this.setState({userdata:JSON.parse(data)})
         })
     }
+    logout=()=>{
+        AsyncStorage.clear()
+        this.props.navigation.navigate('Elderorhelper')
+    }
     render() {
 
 
@@ -83,10 +87,10 @@ class Elderabout extends Component {
                             <MaterialCommunityIcons name="information-variant"  size={17} style={{color:'white',padding:3}} />
                             <Text style={{color:'white',fontSize:18,paddingLeft:8,padding:3}}>About</Text>
                         </View>
-                        <View style={{flexDirection:'row',marginVertical:10}}>
+                        <TouchableOpacity style={{flexDirection:'row',marginVertical:10,flex:1}} onPress={this.logout}>
 
                             <Text style={{color:'white',fontSize:18,paddingLeft:8,padding:3}}>Logout</Text>
-                        </View>
+                        </TouchableOpacity>
                     </ScrollView>
                 </View>
             </View>
