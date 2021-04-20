@@ -90,9 +90,9 @@ class Main extends Component {
                 <View style={styles.one}>
                     <View style={styles.oval1}></View>
                     <View style={styles.oval2}></View>
-                    <TouchableOpacity style={{ flexDirection: 'row', marginTop: 35, padding: 20, justifyContent: 'space-around' }}>
-                        <Entypo name="menu" size={24} color="white" style={{ flex: 1 }}  />
-                        <View>
+                    <TouchableOpacity style={{  marginTop: 35, padding: 20, }}>
+                       
+                        <View style={{alignItems:'flex-end'}}>
                             <Ionicons name="notifications" size={24} color="white" />
                             <Badge status="warning" containerStyle={{ position: 'absolute', top: -4, right: -4 }} />
                         </View>
@@ -162,14 +162,14 @@ class Main extends Component {
                                 </View>
                                 <Text style={{ color: 'white', fontSize: 22, paddingVertical: 10, paddingHorizontal: 10 }}>Food</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={{ flexDirection: 'row', paddingTop: 20 }}>
-                                <View style={{ height: 50, width: 50, backgroundColor: 'violet', borderRadius: 50, justifyContent: 'center', alignItems: 'center' }}>
+                            <TouchableOpacity style={{ flexDirection: 'row', paddingTop: 20 }} onPress={()=>this.props.navigation.navigate('Travellanding')}>
+                                <View style={{ height: 50, width: 50, backgroundColor: 'dodgerblue', borderRadius: 50, justifyContent: 'center', alignItems: 'center' }} >
                                     <FontAwesome name="car" size={24} color="white" />
                                 </View>
                                 <Text style={{ color: 'white', fontSize: 22, paddingVertical: 10, paddingHorizontal: 10 }}>Travel</Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={{ flexDirection: 'row', paddingTop: 20 }}>
-                                <View style={{ height: 50, width: 50, backgroundColor: 'dodgerblue', borderRadius: 50, justifyContent: 'center', alignItems: 'center' }}>
+                                <View style={{ height: 50, width: 50, backgroundColor: 'pink', borderRadius: 50, justifyContent: 'center', alignItems: 'center' }}>
                                     <MaterialIcons name="add" size={24} color="white" />
                                 </View>
                                 <Text style={{ color: 'white', fontSize: 22, paddingVertical: 10, paddingHorizontal: 10 }}>Any other</Text>

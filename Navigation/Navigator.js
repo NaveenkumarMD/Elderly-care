@@ -27,6 +27,11 @@ import Meddetails from '../Components/Screens/Medicine/Meddetails'
 import Findhelpermedicine from '../Components/Screens/Medicine/Findhelpermedicine'
 import Medjobview from '../Components/Helpers/Medjobview'
 import Helperabout from '../Components/Helpers/Helperabout'
+import Traveljobview from '../Components/Helpers/Traveljobview'
+import Traveldetails from '../Components/Screens/Travel/Traveldetails'
+import Findhelpertravel from '../Components/Screens/Travel/Findhelpertravel'
+import Travellanding from '../Components/Screens/Travel/Travellanding'
+import Viewrequesttravel from '../Components/Screens/Travel/Viewrequesttravel'
 
 const screenOptions = {
     headerStyle: {
@@ -49,19 +54,22 @@ export default class Navigator extends Component {
         return (
             <NavigationContainer>
                 <StatusBar style="auto" />
-                <stack.Navigator initialRouteName={Helpersignup} screenOptions={screenOptions}>
-                    <stack.Screen name="Elderorhelper" component={Elderorhelper} options={{ headerShown: false }} />
+                <stack.Navigator initialRouteName={Helpersignup} screenOptions={screenOptions} >
+                <stack.Screen name="Elderorhelper" component={Elderorhelper} options={{ headerShown: false }} />
+                    <stack.Screen name="Traveldetails" component={Traveldetails} options={{ title: "Details" }} />
+<stack.Screen name="Traveljobview" component={Traveljobview} options={{title:"Travel"}}/>
                     <stack.Screen name="Helperabout" component={Helperabout} options={{ title: 'About' }} />
                     <stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
                     <stack.Screen name="Medjobview" component={Medjobview} options={{ title: 'job View' }} />
                     <stack.Screen name="Medicinelanding" component={Medicinelanding} options={{ title: 'Pending requests' }} />
                     <stack.Screen name="Findhelpermedicine" component={Findhelpermedicine} options={{ title: 'Find helper' }} />
-
+            <stack.Screen name="Findhelpertravel" component={Findhelpertravel} options={{title:"Find helpers"}}/>
+<stack.Screen name="Travellanding" component={Travellanding} options={{title:'Pending jobs'}}/>
                     <stack.Screen name="Meddetails" component={Meddetails} options={{ title: 'Medicines' }} />
-                    <stack.Screen name="Helpermain" component={Helpermain} options={{headerShown:false }} />
+                    <stack.Screen name="Helpermain" component={Helpermain} options={{ headerShown: false }} />
                     <stack.Screen name="Viewrequestmed" component={Viewrequestmed} options={{ title: 'Request info' }} />
                     <stack.Screen name="Acceptedjobs" component={Acceptedjobs} options={{ title: 'Accepted jobs' }} />
-
+<stack.Screen name="Viewrequesttravel" component={Viewrequesttravel} options={{title:"View Progress"}}/>
                     <stack.Screen name="Viewjobs" component={Viewjobs} options={{ title: 'Assigned jobs' }} />
                     <stack.Screen name="Essentialjobview" component={Essenntialjobview} options={{ title: 'Job info' }} />
                     <stack.Screen name="Essentialslanding" component={Esentialslanding} options={{ title: 'Pending requests' }} />

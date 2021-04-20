@@ -18,8 +18,8 @@ class Viewjobs extends Component {
             type: type,
             accepted: false
         }
-        if (type == "Medicine") {
-            return this.props.navigation.navigate("Medjobview", { data: data })
+        if (type == "Travel") {
+            return this.props.navigation.navigate("Traveljobview", { data: data })
         }
         this.props.navigation.navigate("Essentialjobview", { data: data })
     }
@@ -38,7 +38,7 @@ class Viewjobs extends Component {
                 x.id = doc.id
                 arr.push(x)
             })
-            await firebase.firestore().collection('Essentials').where("Requestedpeople." + this.state.userdata.mobile, "==", false).where("status." + "Accepted", "==", false).where("Declined." + this.state.userdata.mobile, "==", false).onSnapshot(query => {
+            await firebase.firestore().collection('Essentials').where("Requestedpeople." + this.state.userdata.mobile, "==", false).where("status." + "Accepted", "==", false).where("Declined." + this.state.userdata.mobile, "==", false).onSnapshot(async query => {
 
                 query.forEach(doc => {
                     var x = doc.data()
@@ -47,11 +47,25 @@ class Viewjobs extends Component {
                     x.id = doc.id
                     arr.push(x)
                 })
-                this.setState({ loading: false, jobs: arr })
+                await firebase.firestore().collection('Travel').where("Requestedpeople." + this.state.userdata.mobile, "==", false).where("status." + "Accepted", "==", false).where("Declined." + this.state.userdata.mobile, "==", false).onSnapshot(query => {
+
+                    query.forEach(doc => {
+                        var x = doc.data()
+                        x.type = "Travel"
+                        console.log(doc.data())
+                        x.id = doc.id
+                        arr.push(x)
+                    })
+                    this.setState({ loading: false, jobs: arr })
+    
+                }).catch(err => {
+                    console.log(err.message)
+                })
 
             }).catch(err => {
                 console.log(err.message)
             })
+            
 
         }).catch(err => {
             console.log(err.message)

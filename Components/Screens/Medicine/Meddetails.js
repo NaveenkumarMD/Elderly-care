@@ -20,6 +20,9 @@ class Meddetails extends Component {
         }
     }
     handlenext = () => {
+        if(this.state.products.length==0 && this.state.url==''){
+            return alert("Give some details")
+        }
         var data={
             products:this.state.products,
             url:this.state.url
@@ -53,6 +56,9 @@ class Meddetails extends Component {
         this.setState({ products: temp })
     }
     additem = async () => {
+        if(this.state.item.name==null){
+            return alert("Search and select some items")
+        }
         var temp = []
         temp = this.state.products
         var x = {
@@ -183,10 +189,10 @@ class Meddetails extends Component {
 
                 <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
                     <TouchableOpacity style={styles.button} onPress={() => this.setState({ select: true })}>
-                        <Text style={{ color: 'white' }}>Pick an image</Text>
+                        <Text style={{ color: 'white',fontSize:15 }}>Pick an image</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.button} onPress={() => this.setState({ select: false })}>
-                        <Text style={{ color: 'white' }}>Select Medicines</Text>
+                        <Text style={{ color: 'white',fontSize:15 }}>Select Medicines</Text>
                     </TouchableOpacity>
                 </View>
                 <View style={{ backgroundColor: 'indigo', padding: 15, marginTop: 4, flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -230,6 +236,8 @@ const styles = StyleSheet.create({
     item: {
         color: 'white',
         padding: 10,
-        flex: 1
+        flex: 1,
+        borderBottomColor:'#3b3b3b',
+        borderBottomWidth:1
     }
 })

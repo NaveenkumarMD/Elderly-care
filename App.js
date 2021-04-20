@@ -84,6 +84,7 @@ export  async function sendPushNotification(expoPushToken,{title,body}) {
 
 async function registerForPushNotificationsAsync() {
   let token;
+  console.log("running")
   if (Constants.isDevice) {
     const { status: existingStatus } = await Notifications.getPermissionsAsync();
     let finalStatus = existingStatus;

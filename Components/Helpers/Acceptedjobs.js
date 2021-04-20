@@ -18,7 +18,10 @@ class Acceptedjobs extends Component {
             type:type,
             accepted:true
         }
-
+        console.log(data)
+        if (type == "Travel") {
+            return this.props.navigation.navigate("Traveljobview", { data: data })
+        }
         this.props.navigation.navigate("Essentialjobview",{data:data})
     }
     componentDidMount = async () => {
@@ -36,7 +39,7 @@ class Acceptedjobs extends Component {
                 x.id = doc.id
                 arr.push(x)
             })
-            await firebase.firestore().collection('Medicine').where("Helperid","==",this.state.userdata.mobile).where("status."+"Completed","==",false).onSnapshot(query => {
+            await firebase.firestore().collection('Medicine').where("Helperid","==",this.state.userdata.mobile).where("status."+"Completed","==",false).onSnapshot(async query => {
                
                 query.forEach(doc => {
                     var x = doc.data()
@@ -45,9 +48,21 @@ class Acceptedjobs extends Component {
                     x.id = doc.id
                     arr.push(x)
                 })
-                this.setState({ jobs: arr })
-                console.log(arr)
-                this.setState({ loading: false })
+                await firebase.firestore().collection('Travel').where("Helperid","==",this.state.userdata.mobile).where("status."+"Completed","==",false).onSnapshot(query => {
+               
+                    query.forEach(doc => {
+                        var x = doc.data()
+                        x.type = "Travel"
+                        console.log(doc.data())
+                        x.id = doc.id
+                        arr.push(x)
+                    })
+                    this.setState({ jobs: arr })
+                    console.log(arr)
+                    this.setState({ loading: false })
+                }).catch(err => {
+                    console.log(err.message)
+                })
             }).catch(err => {
                 console.log(err.message)
             })
