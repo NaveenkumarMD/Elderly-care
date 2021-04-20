@@ -7,7 +7,7 @@ import { AntDesign, Ionicons, Feather } from '@expo/vector-icons'
 import call from 'react-native-phone-call'
 import { Rating, Input } from 'react-native-elements'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-class Viewrequesttravel extends Component {
+class Viewrequestfood extends Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -63,10 +63,10 @@ class Viewrequesttravel extends Component {
                 var d = this.state.data
                 d.Datecompleted = date
                 d.Timecomplelted = time
-                firebase.firestore().collection('Travelcompleted').add(
+                firebase.firestore().collection('Foodcompleted').add(
                     d
                 ).then(res => {
-                    firebase.firestore().collection('Travel').doc(this.state.id).delete().then(res => {
+                    firebase.firestore().collection('Food').doc(this.state.id).delete().then(res => {
                         this.setState({ modalVisible: false })
                         this.props.navigation.navigate('Main')
                     })
@@ -76,15 +76,16 @@ class Viewrequesttravel extends Component {
 
     }
     componentDidMount = async () => {
+        //alert("dsr")
         AsyncStorage.getItem('userdata').then(data => {
             this.setState({ Elderdata: JSON.parse(data) })
             console.log(data)
         })
         this.setState({ id: this.props.route.params.data })
         console.log(this.props.route.params)
-        firebase.firestore().collection('Travel').doc(this.props.route.params.data).onSnapshot(doc => {
+        firebase.firestore().collection('Food').doc(this.props.route.params.data).onSnapshot(doc => {
             console.log(doc.data())
-            this.setState({ data: doc.data(), loading: false, status: doc.data().status, url: doc.data().imageurl })
+            this.setState({ data: doc.data(), loading: false, status: doc.data().status, })
         }).catch(err => {
             alert(err.message)
         })
@@ -129,7 +130,18 @@ class Viewrequesttravel extends Component {
                             <Text style={{ color: 'white', fontSize: 20 }}>Completed</Text>
                         </View>
                     </View>
+                    <View style={{ borderBottomColor: '#424242', borderBottomWidth: 2, paddingBottom: 20 }}>
+                        <Text style={{ color: '#949494', fontSize: 24, padding: 10 }}>Food details</Text>
+                        <View style={{ flexWrap: 'wrap' }}>
+                            <Text style={{ color: 'white', fontSize: 20, paddingLeft: 30 }}>{this.state.data.food}</Text>
+                        </View>
 
+                    </View>
+                    <View style={{ borderBottomColor: '#424242', borderBottomWidth: 2 }}>
+                        <Text style={{ color: '#949494', fontSize: 24, padding: 10 }}>Expected Time</Text>
+                        <Text style={{ fontSize: 16, color: 'white', padding: 10 }}>Time:{this.state.data.time}</Text>
+
+                    </View>
                     <View style={{ borderBottomColor: '#424242', borderBottomWidth: 2 }}>
                         <Text style={{ color: '#949494', fontSize: 24, padding: 10 }}>Requested date and time</Text>
                         <Text style={{ fontSize: 16, color: 'white', padding: 10 }}>Date:{this.state.data.Daterequested}</Text>
@@ -152,17 +164,12 @@ class Viewrequesttravel extends Component {
                             </View>
                         </View>
                     }
-                    <Text style={{ color: '#949494', fontSize: 24, padding: 10 }}>Travel details</Text>
-                    <View style={{ padding: 20 }}>
-                        <Text style={{ color: 'white', fontSize: 20, padding: 10 }}>Location:{this.state.data.routedata.location}</Text>
-                        <Text style={{ color: 'white', fontSize: 20, padding: 10 }}>Purpose:{this.state.data.routedata.purpose}</Text>
-                        <Text style={{ color: 'white', fontSize: 20, padding: 10 }}>Mode:{this.state.data.routedata.mode}</Text>
-                        <Text style={{ color: 'white', fontSize: 20, padding: 10 }}>Date:{this.state.data.routedata.traveldate}</Text>
-                        <Text style={{ color: 'white', fontSize: 20, padding: 10 }}>Time:{this.state.data.routedata.traveltime}</Text>
 
-                    </View>
+
                 </ScrollView>
-                {this.state.status.Accepted &&
+                {
+                    this.state.status.Accepted &&
+
                     <TouchableOpacity style={{ backgroundColor: 'green', padding: 20, justifyContent: 'center', alignItems: 'center' }} onPress={() => this.setState({ modalVisible: true })}>
                         <Text style={{ color: 'white', fontSize: 20 }}>Completed</Text>
                     </TouchableOpacity>
@@ -171,7 +178,7 @@ class Viewrequesttravel extends Component {
         )
     }
 }
-export default Viewrequesttravel
+export default Viewrequestfood
 const styles = StyleSheet.create({
     container: {
         flex: 1,

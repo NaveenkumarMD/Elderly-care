@@ -8,22 +8,23 @@ import { Rating } from 'react-native-elements'
 import Spinner from 'react-native-loading-spinner-overlay'
 import { sendPushNotification } from '../../../App'
 import {AntDesign} from '@expo/vector-icons'
-class Findhelpermedicine extends Component {
+class Findhelpercounselling extends Component {
     constructor(props) {
         super(props)
         this.state = {
             modalVisible:false,
             products: [],
             data: [],
-            userdata: '', loading: true,
+            userdata: '', loading: false,
             token: [], helpersid: []
         }
     }
     notify = async () => {
        
         this.state.token.forEach(async data => {
-            await sendPushNotification(data, { title: 'Medicine', body: `${this.state.userdata.name} is asking a help to buy him some Medicines could you please help him` })
+            await sendPushNotification(data, { title: 'Counselling', body: `${this.state.userdata.name} need some emotional support could you please help him` })
         })
+
         var elder = this.state.userdata
         var ref = new Date()
         var date = ref.getDate() + "/" + ref.getMonth() + "/" + ref.getFullYear()
@@ -34,7 +35,7 @@ class Findhelpermedicine extends Component {
         this.state.helpersid.forEach(data => {
             reqpeople[data] = false
         })
-        firebase.firestore().collection('Medicine').add({
+        firebase.firestore().collection('Counselling').add({
             Eldername: elder.name,
             Elderid: elder.mobile,
             Daterequested: date,
@@ -46,9 +47,7 @@ class Findhelpermedicine extends Component {
                 Accepted: false,
                 Completed: false
             },
-            products: this.state.products,
-            payment: 200,
-            imageurl:this.state.url
+           
         }).then(docRef => {
             firebase.firestore().collection('Elders').doc(this.state.userdata.mobile).set({
                 currentessentialsid: docRef.id
@@ -61,13 +60,11 @@ class Findhelpermedicine extends Component {
         this.props.navigation.navigate('Viewhelpers', { id: mobile })
     }
     async componentDidMount() {
-        console.log(this.props.route.params.data)
-        this.setState({ products: this.props.route.params.data.products,url:this.props.route.params.data.url })
         await AsyncStorage.getItem('userdata').then(data => {
             this.setState({ userdata: JSON.parse(data) })
-            //console.log(JSON.parse(data))
+            console.log(JSON.parse(data))
         })
-        await firebase.firestore().collection('Helpers').where('interested', 'array-contains', 'Medicine').get().then(query => {
+        await firebase.firestore().collection('Helpers').where('interested', 'array-contains', 'Counselling').get().then(query => {
             var arr = []
             var tokenarray = []
             var helpersid = []
@@ -83,25 +80,31 @@ class Findhelpermedicine extends Component {
                     tokenarray.push(x.token)
                 }
             })
+        
             this.setState({ data: arr.sort(sortbydist), loading: false, token: tokenarray, helpersid: helpersid })
             //console.log(this.state.token)
 
         }
-        )
+        ).catch(err=>{
+            this.setState({loading:false})
+            alert(err.message)
+        })
 
     }
     render() {
 
-        const Item = ({ title, distance, mobile, rating }) => (
+        const Item = ({ title, distance, mobile, rating }) => {
+        if(distance<5){
+            (
             <TouchableOpacity style={styles.item} onPress={() => this.handleviewhelper(mobile)}>
                 <View >
                     <Text style={styles.title}>{title}</Text>
-                    <Text style={{ color: 'indigo' }}>{distance} km</Text>
+                    <Text style={{ color: 'brown' }}>{distance} km</Text>
                 </View>
                 <Rating type='star' ratingCount={5} startingValue={rating} imageSize={20} showRating readonly tintColor="black" ratingColor="red" showRating={false} />
 
             </TouchableOpacity>
-        );
+        )}}
 
         const renderItem = ({ item }) => (
             <Item title={item.name} distance={item.distance} mobile={item.mobile} rating={item.rating} />
@@ -118,7 +121,7 @@ class Findhelpermedicine extends Component {
                         this.setState({
                             modalVisible:false
                         })
-                        this.props.navigation.navigate('Medicinelanding')
+                        this.props.navigation.navigate('Counsellinglanding')
                         
                     }}>
                         <View style={styles.modalicon}>
@@ -136,7 +139,7 @@ class Findhelpermedicine extends Component {
                     <Text style={{ color: 'white', alignSelf: 'center' }}></Text>
                 </View>
                 <View>
-                    <TouchableOpacity style={{ backgroundColor: 'indigo', alignItems: 'center', padding: 10 }} onPress={() => this.notify()}>
+                    <TouchableOpacity style={{ backgroundColor: 'brown', alignItems: 'center', padding: 10 }} onPress={() => this.notify()}>
                         <Text style={{ color: 'white', fontSize: 20 }}>Request</Text>
                     </TouchableOpacity>
                 </View>
@@ -144,7 +147,7 @@ class Findhelpermedicine extends Component {
         )
     }
 }
-export default Findhelpermedicine
+export default Findhelpercounselling
 const styles = StyleSheet.create({
     modal:{
         

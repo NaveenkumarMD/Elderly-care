@@ -1,9 +1,11 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import React, { Component } from 'react'
-import { Text, View ,StyleSheet, ScrollView, TouchableOpacity} from 'react-native'
+import { Text, View ,StyleSheet, ScrollView, TouchableOpacity,Dimensions} from 'react-native'
 import firebase from 'firebase'
 import {Ionicons,FontAwesome} from '@expo/vector-icons'
 import Spinner from 'react-native-loading-spinner-overlay'
+const screen=Dimensions.get('screen')
+const height=screen.height
 class Medicinelanding extends Component {
     constructor(props){
         super(props)
@@ -55,6 +57,11 @@ class Medicinelanding extends Component {
         })
         return (
             <View style={styles.container}>
+                {this.state.requests.length == 0 &&
+                    <View style={{ alignItems: 'center', justifyContent: 'center', marginTop: height / 3 }}>
+                        <Text style={{ color: 'indigo', fontSize: 20, fontWeight: 'bold' }}>No Pending requests</Text>
+                    </View>
+                }
                 <Spinner visible={this.state.loading} textContent={'Loading...'} textStyle={styles.spinnerTextStyle}/>
                 <ScrollView style={{paddingHorizontal:5}}>
                     {requests}

@@ -4,7 +4,7 @@
     "slug": "contest",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/logo-circle.png",
     "notification":{
       "androidMode":"default",
       "icon":"./assets/icon.png"

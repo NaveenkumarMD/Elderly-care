@@ -45,10 +45,10 @@ class Viewrequest extends Component {
         arr.push(data)
         console.log(data)
         firebase.firestore().collection('Helpers').doc(this.state.data.Helperid).get().then(doc => {
-            var array=[]
+            var array = []
             console.log(doc.data().comments)
-            var x=doc.data().comments
-            array=[...doc.data().comments,data]
+            var x = doc.data().comments
+            array = [...doc.data().comments, data]
             firebase.firestore().collection('Helpers').doc(this.state.data.Helperid).set({
                 comments: array
             }, { merge: true }).then(res => {
@@ -56,15 +56,15 @@ class Viewrequest extends Component {
                 var date = ref.getDate() + "/" + ref.getMonth() + "/" + ref.getFullYear()
                 //console.log(date)
                 var time = ref.getHours() + ":" + ref.getMinutes()
-                var d=this.state.data
-                d.Datecompleted=date
-                d.Timecomplelted=time
+                var d = this.state.data
+                d.Datecompleted = date
+                d.Timecomplelted = time
                 firebase.firestore().collection('Essentialscompleted').add(
                     d
                 ).then(res => {
-                    firebase.firestore().collection('Essentials').doc(this.state.id).delete().then(res=>{
-                    this.setState({modalVisible:false})
-                    this.props.navigation.navigate('Main')
+                    firebase.firestore().collection('Essentials').doc(this.state.id).delete().then(res => {
+                        this.setState({ modalVisible: false })
+                        this.props.navigation.navigate('Main')
                     })
                 })
             })
@@ -141,24 +141,32 @@ class Viewrequest extends Component {
                         <Text style={{ fontSize: 16, color: 'white', padding: 10 }}>Date:{this.state.data.Daterequested}</Text>
                         <Text style={{ fontSize: 16, color: 'white', padding: 10 }}>Time:{this.state.data.Timerequested}</Text>
                     </View>
-                    <View>
-                        <Text style={{ color: '#949494', fontSize: 24, padding: 10 }}>Helper details</Text>
-                        <View style={{ padding: 10 }}>
-                            <Text style={{ color: 'white', fontSize: 22 }}>{this.state.data.Helpername}</Text>
-                            <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 20, borderBottomColor: '#424242', borderBottomWidth: 2 }} onPress={() => this.whatsapp(this.state.data.Helperid)}>
-                                <Text style={{ color: 'white', fontSize: 20 }}>whatsapp</Text>
-                                <Ionicons name="ios-logo-whatsapp" size={24} color="green" />
-                            </TouchableOpacity>
-                            <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 20, borderBottomColor: '#424242', borderBottomWidth: 2 }} onPress={() => this.call(this.state.data.Helperid)}>
-                                <Text style={{ color: 'white', fontSize: 20 }}>Call</Text>
-                                <Feather name="phone-call" size={24} color="green" />
-                            </TouchableOpacity>
+                    {this.state.status.Accepted &&
+                        <View>
+                            <Text style={{ color: '#949494', fontSize: 24, padding: 10 }}>Helper details</Text>
+                            <View style={{ padding: 10 }}>
+                                <Text style={{ color: 'white', fontSize: 22 }}>{this.state.data.Helpername}</Text>
+                                <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 20, borderBottomColor: '#424242', borderBottomWidth: 2 }} onPress={() => this.whatsapp(this.state.data.Helperid)}>
+                                    <Text style={{ color: 'white', fontSize: 20 }}>whatsapp</Text>
+                                    <Ionicons name="ios-logo-whatsapp" size={24} color="green" />
+                                </TouchableOpacity>
+                                <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 20, borderBottomColor: '#424242', borderBottomWidth: 2 }} onPress={() => this.call(this.state.data.Helperid)}>
+                                    <Text style={{ color: 'white', fontSize: 20 }}>Call</Text>
+                                    <Feather name="phone-call" size={24} color="green" />
+                                </TouchableOpacity>
+                            </View>
                         </View>
-                    </View>
+
+                    }
+
                 </ScrollView>
-                <TouchableOpacity style={{ backgroundColor: 'green', padding: 20, justifyContent: 'center', alignItems: 'center' }} onPress={() => this.setState({ modalVisible: true })}>
-                    <Text style={{ color: 'white', fontSize: 20 }}>Completed</Text>
-                </TouchableOpacity>
+                {
+                    this.state.status.Accepted &&
+                    <TouchableOpacity style={{ backgroundColor: 'green', padding: 20, justifyContent: 'center', alignItems: 'center' }} onPress={() => this.setState({ modalVisible: true })}>
+                        <Text style={{ color: 'white', fontSize: 20 }}>Completed</Text>
+                    </TouchableOpacity>
+                }
+
             </View>
         )
     }

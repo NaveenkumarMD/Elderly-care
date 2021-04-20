@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, Button, FlatList, StyleSheet, TouchableOpacity ,Modal,Alert} from 'react-native'
+import { Text, View, Button, FlatList, StyleSheet, TouchableOpacity, Modal, Alert } from 'react-native'
 import firebase from 'firebase'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import distance from '../../../Functions/Finddistance'
@@ -7,22 +7,22 @@ import sortbydist from '../../../Functions/Sortbydistance'
 import { Rating } from 'react-native-elements'
 import Spinner from 'react-native-loading-spinner-overlay'
 import { sendPushNotification } from '../../../App'
-import {AntDesign} from '@expo/vector-icons'
-class Findhelpermedicine extends Component {
+import { AntDesign } from '@expo/vector-icons'
+class Findhelperfood extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            modalVisible:false,
-            products: [],
+            modalVisible: false,
+            routedata: {},
             data: [],
             userdata: '', loading: true,
             token: [], helpersid: []
         }
     }
     notify = async () => {
-       
+
         this.state.token.forEach(async data => {
-            await sendPushNotification(data, { title: 'Medicine', body: `${this.state.userdata.name} is asking a help to buy him some Medicines could you please help him` })
+            await sendPushNotification(data, { title: 'Food', body: `${this.state.userdata.name} is asking a help to buy him some food. Could you please help him?` })
         })
         var elder = this.state.userdata
         var ref = new Date()
@@ -34,26 +34,26 @@ class Findhelpermedicine extends Component {
         this.state.helpersid.forEach(data => {
             reqpeople[data] = false
         })
-        firebase.firestore().collection('Medicine').add({
+        firebase.firestore().collection('Food').add({
             Eldername: elder.name,
             Elderid: elder.mobile,
             Daterequested: date,
             Timerequested: time,
             Requestedpeople: reqpeople,
-            Declined:reqpeople,
+            Declined: reqpeople,
             status: {
                 Requested: true,
                 Accepted: false,
                 Completed: false
             },
-            products: this.state.products,
-            payment: 200,
-            imageurl:this.state.url
+            food: this.state.routedata.food,
+            notes: this.state.routedata.notes,
+            time: this.state.routedata.time
         }).then(docRef => {
             firebase.firestore().collection('Elders').doc(this.state.userdata.mobile).set({
                 currentessentialsid: docRef.id
-            }, { merge: true }).then(res=>{
-                this.setState({modalVisible:true})
+            }, { merge: true }).then(res => {
+                this.setState({ modalVisible: true })
             })
         })
     }
@@ -62,12 +62,12 @@ class Findhelpermedicine extends Component {
     }
     async componentDidMount() {
         console.log(this.props.route.params.data)
-        this.setState({ products: this.props.route.params.data.products,url:this.props.route.params.data.url })
+        this.setState({ routedata: this.props.route.params.data })
         await AsyncStorage.getItem('userdata').then(data => {
             this.setState({ userdata: JSON.parse(data) })
             //console.log(JSON.parse(data))
         })
-        await firebase.firestore().collection('Helpers').where('interested', 'array-contains', 'Medicine').get().then(query => {
+        await firebase.firestore().collection('Helpers').where('interested', 'array-contains', 'Food').get().then(query => {
             var arr = []
             var tokenarray = []
             var helpersid = []
@@ -82,6 +82,7 @@ class Findhelpermedicine extends Component {
                     helpersid.push(x.mobile)
                     tokenarray.push(x.token)
                 }
+
             })
             this.setState({ data: arr.sort(sortbydist), loading: false, token: tokenarray, helpersid: helpersid })
             //console.log(this.state.token)
@@ -92,40 +93,44 @@ class Findhelpermedicine extends Component {
     }
     render() {
 
-        const Item = ({ title, distance, mobile, rating }) => (
-            <TouchableOpacity style={styles.item} onPress={() => this.handleviewhelper(mobile)}>
-                <View >
-                    <Text style={styles.title}>{title}</Text>
-                    <Text style={{ color: 'indigo' }}>{distance} km</Text>
-                </View>
-                <Rating type='star' ratingCount={5} startingValue={rating} imageSize={20} showRating readonly tintColor="black" ratingColor="red" showRating={false} />
+        const Item = ({ title, distance, mobile, rating }) => {
+            if (distance < 5) {
+                return (
+                    <TouchableOpacity style={styles.item} onPress={() => this.handleviewhelper(mobile)}>
+                        <View >
+                            <Text style={styles.title}>{title}</Text>
+                            <Text style={{ color: 'green' }}>{distance} km</Text>
+                        </View>
+                        <Rating type='star' ratingCount={5} startingValue={rating} imageSize={20} showRating readonly tintColor="black" ratingColor="red" showRating={false} />
 
-            </TouchableOpacity>
-        );
+                    </TouchableOpacity>
+                );
 
+            }
+        }
         const renderItem = ({ item }) => (
             <Item title={item.name} distance={item.distance} mobile={item.mobile} rating={item.rating} />
         );
 
         return (
-            <View style={styles.container }>
+            <View style={styles.container}>
                 <Modal animationType="fade" transparent={true} visible={this.state.modalVisible} onRequestClose={() => {
                     Alert.alert("Modal has been closed.");
                     setModalVisible(!modalVisible);
                 }}
                 >
-                    <TouchableOpacity style={styles.modal} onPress={()=>{
+                    <TouchableOpacity style={styles.modal} onPress={() => {
                         this.setState({
-                            modalVisible:false
+                            modalVisible: false
                         })
-                        this.props.navigation.navigate('Medicinelanding')
-                        
+                        this.props.navigation.navigate('Foodlanding')
+
                     }}>
                         <View style={styles.modalicon}>
-                            <AntDesign name="checkcircle"  color="green" size={80} />
+                            <AntDesign name="checkcircle" color="green" size={80} />
                         </View>
-                        <Text style={{fontSize:25}}>Success</Text>
-                        
+                        <Text style={{ fontSize: 25 }}>Success</Text>
+
                     </TouchableOpacity>
                 </Modal>
                 <Spinner visible={this.state.loading} textContent={'Loading...'} textStyle={styles.spinnerTextStyle} />
@@ -136,7 +141,7 @@ class Findhelpermedicine extends Component {
                     <Text style={{ color: 'white', alignSelf: 'center' }}></Text>
                 </View>
                 <View>
-                    <TouchableOpacity style={{ backgroundColor: 'indigo', alignItems: 'center', padding: 10 }} onPress={() => this.notify()}>
+                    <TouchableOpacity style={{ backgroundColor: 'green', alignItems: 'center', padding: 10 }} onPress={() => this.notify()}>
                         <Text style={{ color: 'white', fontSize: 20 }}>Request</Text>
                     </TouchableOpacity>
                 </View>
@@ -144,21 +149,21 @@ class Findhelpermedicine extends Component {
         )
     }
 }
-export default Findhelpermedicine
+export default Findhelperfood
 const styles = StyleSheet.create({
-    modal:{
-        
-        justifyContent:'center',
-        alignItems:'center',
-        backgroundColor:'white',
-        height:200,
-        width:200,
-        borderRadius:50,
-        top:'30%',
-        left:'25%'
-        
+    modal: {
+
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'white',
+        height: 200,
+        width: 200,
+        borderRadius: 50,
+        top: '30%',
+        left: '25%'
+
     },
-    modalicon:{
+    modalicon: {
 
     },
     container: {

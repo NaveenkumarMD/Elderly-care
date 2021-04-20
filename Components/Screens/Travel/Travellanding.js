@@ -1,9 +1,11 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import React, { Component } from 'react'
-import { Text, View ,StyleSheet, ScrollView, TouchableOpacity} from 'react-native'
+import { Text, View ,StyleSheet, ScrollView, TouchableOpacity,Dimensions} from 'react-native'
 import firebase from 'firebase'
 import {Ionicons,FontAwesome} from '@expo/vector-icons'
 import Spinner from 'react-native-loading-spinner-overlay'
+const screen=Dimensions.get('screen')
+const height=screen.height
 class Travellanding extends Component {
     constructor(props){
         super(props)
@@ -55,11 +57,16 @@ class Travellanding extends Component {
         })
         return (
             <View style={styles.container}>
-                <Spinner visible={this.state.loading} textContent={'Loading...'} textStyle={styles.spinnerTextStyle}/>
+                {this.state.requests.length == 0 &&
+                    <View style={{ alignItems: 'center', justifyContent: 'center', marginTop: height / 3 }}>
+                        <Text style={{ color: 'dodgerblue', fontSize: 20, fontWeight: 'bold' }}>No Pending requests</Text>
+                    </View>
+                }
+                <Spinner visible={this.state.loading} textContent={'Loading...'} textStyle={styles.spinnerTextStyle} color="dodgerblue"/>
                 <ScrollView style={{paddingHorizontal:5}}>
                     {requests}
                 </ScrollView>
-                <TouchableOpacity style={{backgroundColor:'dodgerblue',height:50,justifyContent:'center',alignItems:'center'}} onPress={()=>this.props.navigation.navigate('Meddetails')}>
+                <TouchableOpacity style={{backgroundColor:'dodgerblue',height:50,justifyContent:'center',alignItems:'center'}} onPress={()=>this.props.navigation.navigate('Traveldetails')}>
                     <View style={{flexDirection:'row'}}>
                         <Ionicons name="add-circle-sharp" size={25} color="white" />
                         <Text style={{fontSize:25,paddingLeft:4,color:'white'}}>Add</Text>

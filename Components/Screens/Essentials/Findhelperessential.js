@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, Button, FlatList, StyleSheet, TouchableOpacity ,Modal,Alert} from 'react-native'
+import { Text, View, Button, FlatList, StyleSheet, TouchableOpacity, Modal, Alert } from 'react-native'
 import firebase from 'firebase'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import distance from '../../../Functions/Finddistance'
@@ -7,12 +7,12 @@ import sortbydist from '../../../Functions/Sortbydistance'
 import { Rating } from 'react-native-elements'
 import Spinner from 'react-native-loading-spinner-overlay'
 import { sendPushNotification } from '../../../App'
-import {AntDesign} from '@expo/vector-icons'
+import { AntDesign } from '@expo/vector-icons'
 class Findhelperessential extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            modalVisible:false,
+            modalVisible: false,
             products: [],
             data: [],
             userdata: '', loading: true,
@@ -20,7 +20,7 @@ class Findhelperessential extends Component {
         }
     }
     notify = async () => {
-       
+
         this.state.token.forEach(async data => {
             await sendPushNotification(data, { title: 'Essentials', body: `${this.state.userdata.name} is asking a help to buy him some essentials could you please help him` })
         })
@@ -40,7 +40,7 @@ class Findhelperessential extends Component {
             Daterequested: date,
             Timerequested: time,
             Requestedpeople: reqpeople,
-            Declined:reqpeople,
+            Declined: reqpeople,
             status: {
                 Requested: true,
                 Accepted: false,
@@ -51,8 +51,8 @@ class Findhelperessential extends Component {
         }).then(docRef => {
             firebase.firestore().collection('Elders').doc(this.state.userdata.mobile).set({
                 currentessentialsid: docRef.id
-            }, { merge: true }).then(res=>{
-                this.setState({modalVisible:true})
+            }, { merge: true }).then(res => {
+                this.setState({ modalVisible: true })
             })
         })
     }
@@ -89,40 +89,45 @@ class Findhelperessential extends Component {
     }
     render() {
 
-        const Item = ({ title, distance, mobile, rating }) => (
-            <TouchableOpacity style={styles.item} onPress={() => this.handleviewhelper(mobile)}>
-                <View >
-                    <Text style={styles.title}>{title}</Text>
-                    <Text style={{ color: '#ff7e07' }}>{distance} km</Text>
-                </View>
-                <Rating type='star' ratingCount={5} startingValue={rating} imageSize={20} showRating readonly tintColor="black" ratingColor="red" showRating={false} />
+        const Item = ({ title, distance, mobile, rating }) => {
+            if(distance<5){
+                return (
+                    <TouchableOpacity style={styles.item} onPress={() => this.handleviewhelper(mobile)}>
+                        <View >
+                            <Text style={styles.title}>{title}</Text>
+                            <Text style={{ color: 'red' }}>{distance} km</Text>
+                        </View>
+                        <Rating type='star' ratingCount={5} startingValue={rating} imageSize={20} showRating readonly tintColor="black" ratingColor="red" showRating={false} />
+    
+                    </TouchableOpacity>
+    
+                )
+            }
 
-            </TouchableOpacity>
-        );
-
+        }
         const renderItem = ({ item }) => (
             <Item title={item.name} distance={item.distance} mobile={item.mobile} rating={item.rating} />
         );
 
         return (
-            <View style={styles.container }>
+            <View style={styles.container}>
                 <Modal animationType="fade" transparent={true} visible={this.state.modalVisible} onRequestClose={() => {
                     Alert.alert("Modal has been closed.");
                     setModalVisible(!modalVisible);
                 }}
                 >
-                    <TouchableOpacity style={styles.modal} onPress={()=>{
+                    <TouchableOpacity style={styles.modal} onPress={() => {
                         this.setState({
-                            modalVisible:false
+                            modalVisible: false
                         })
                         this.props.navigation.navigate('Essentialslanding')
-                        
+
                     }}>
                         <View style={styles.modalicon}>
-                            <AntDesign name="checkcircle"  color="green" size={80} />
+                            <AntDesign name="checkcircle" color="green" size={80} />
                         </View>
-                        <Text style={{fontSize:25}}>Success</Text>
-                        
+                        <Text style={{ fontSize: 25 }}>Success</Text>
+
                     </TouchableOpacity>
                 </Modal>
                 <Spinner visible={this.state.loading} textContent={'Loading...'} textStyle={styles.spinnerTextStyle} />
@@ -133,7 +138,7 @@ class Findhelperessential extends Component {
                     <Text style={{ color: 'white', alignSelf: 'center' }}></Text>
                 </View>
                 <View>
-                    <TouchableOpacity style={{ backgroundColor: '#ff7e07', alignItems: 'center', padding: 10 }} onPress={() => this.notify()}>
+                    <TouchableOpacity style={{ backgroundColor: 'red', alignItems: 'center', padding: 10 }} onPress={() => this.notify()}>
                         <Text style={{ color: 'white', fontSize: 20 }}>Request</Text>
                     </TouchableOpacity>
                 </View>
@@ -143,19 +148,19 @@ class Findhelperessential extends Component {
 }
 export default Findhelperessential
 const styles = StyleSheet.create({
-    modal:{
-        
-        justifyContent:'center',
-        alignItems:'center',
-        backgroundColor:'white',
-        height:200,
-        width:200,
-        borderRadius:50,
-        top:'30%',
-        left:'25%'
-        
+    modal: {
+
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'white',
+        height: 200,
+        width: 200,
+        borderRadius: 50,
+        top: '30%',
+        left: '25%'
+
     },
-    modalicon:{
+    modalicon: {
 
     },
     container: {

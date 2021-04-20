@@ -75,9 +75,11 @@ class Findhelpertravel extends Component {
                 x = doc.data()
                 // console.log(doc.data())
                 x.distance = distance(x.latitude, x.longitude, this.state.userdata.latitude, this.state.userdata.longitude).toFixed(4)
-                arr.unshift(x)
-                helpersid.push(x.mobile)
-                tokenarray.push(x.token)
+                if (x.distance < 5) {
+                    arr.unshift(x)
+                    helpersid.push(x.mobile)
+                    tokenarray.push(x.token)
+                }
             })
             this.setState({ data: arr.sort(sortbydist), loading: false, token: tokenarray, helpersid: helpersid })
             //console.log(this.state.token)

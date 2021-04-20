@@ -18,8 +18,16 @@ class Viewjobs extends Component {
             type: type,
             accepted: false
         }
+        console.log(data)
+        if (type == "Food") {
+            return this.props.navigation.navigate("Foodjobview", { data: data })
+        }
         if (type == "Travel") {
             return this.props.navigation.navigate("Traveljobview", { data: data })
+        }
+        if (type == "Counselling") {
+            
+            return this.props.navigation.navigate("Counsellingjobview", { data: data })
         }
         this.props.navigation.navigate("Essentialjobview", { data: data })
     }
@@ -47,7 +55,7 @@ class Viewjobs extends Component {
                     x.id = doc.id
                     arr.push(x)
                 })
-                await firebase.firestore().collection('Travel').where("Requestedpeople." + this.state.userdata.mobile, "==", false).where("status." + "Accepted", "==", false).where("Declined." + this.state.userdata.mobile, "==", false).onSnapshot(query => {
+                await firebase.firestore().collection('Travel').where("Requestedpeople." + this.state.userdata.mobile, "==", false).where("status." + "Accepted", "==", false).where("Declined." + this.state.userdata.mobile, "==", false).onSnapshot(async query => {
 
                     query.forEach(doc => {
                         var x = doc.data()
@@ -56,7 +64,33 @@ class Viewjobs extends Component {
                         x.id = doc.id
                         arr.push(x)
                     })
-                    this.setState({ loading: false, jobs: arr })
+                    await firebase.firestore().collection('Counselling').where("Requestedpeople." + this.state.userdata.mobile, "==", false).where("status." + "Accepted", "==", false).where("Declined." + this.state.userdata.mobile, "==", false).onSnapshot(async query => {
+
+                        query.forEach(doc => {
+                            var x = doc.data()
+                            x.type = "Counselling"
+                            console.log(doc.data())
+                            x.id = doc.id
+                            arr.push(x)
+                        })
+                        await firebase.firestore().collection('Food').where("Requestedpeople." + this.state.userdata.mobile, "==", false).where("status." + "Accepted", "==", false).where("Declined." + this.state.userdata.mobile, "==", false).onSnapshot(query => {
+
+                            query.forEach(doc => {
+                                var x = doc.data()
+                                x.type = "Food"
+                                console.log(doc.data())
+                                x.id = doc.id
+                                arr.push(x)
+                            })
+                            this.setState({ loading: false, jobs: arr })
+            
+                        }).catch(err => {
+                            console.log(err.message)
+                        })
+        
+                    }).catch(err => {
+                        console.log(err.message)
+                    })
     
                 }).catch(err => {
                     console.log(err.message)

@@ -9,7 +9,7 @@ class Traveldetails extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            date: 'select', dobpickervisibility: false, timevisible: false,time:'',purpose:'',mode:'',location:''
+            date: 'select', dobpickervisibility: false, timevisible: false,time:'select',purpose:'',mode:'',location:''
         }
     }
     handlesubmit=()=>{

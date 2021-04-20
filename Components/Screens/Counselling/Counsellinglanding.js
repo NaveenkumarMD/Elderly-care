@@ -1,12 +1,10 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import React, { Component } from 'react'
-import { Text, View, StyleSheet, ScrollView, TouchableOpacity,Dimensions } from 'react-native'
+import { Text, View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
 import firebase from 'firebase'
 import { Ionicons, FontAwesome } from '@expo/vector-icons'
 import Spinner from 'react-native-loading-spinner-overlay'
-const screen=Dimensions.get('screen')
-const height=screen.height
-class Esentialslanding extends Component {
+class Counsellinglanding extends Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -19,7 +17,7 @@ class Esentialslanding extends Component {
         await AsyncStorage.getItem('userdata').then(userdata => {
             this.setState({ userdata: JSON.parse(userdata) })
         })
-        await firebase.firestore().collection('Essentials').where('Elderid', '==', this.state.userdata.mobile).onSnapshot(querysnapshot => {
+        await firebase.firestore().collection('Counselling').where('Elderid', '==', this.state.userdata.mobile).onSnapshot(querysnapshot => {
             var array = []
             querysnapshot.forEach(doc => {
                 console.log(doc.id)
@@ -33,19 +31,20 @@ class Esentialslanding extends Component {
     }
     render() {
         var a = 0
+
         const requests = this.state.requests.map(data => {
             if (!data.status.Completed) {
                 a += 1
                 return (
-                    <TouchableOpacity activeOpacity={0.5} style={{ padding: 15, flexDirection: 'row', justifyContent: 'space-between', borderBottomColor: 'red', borderBottomWidth: 1 }}
-                        onPress={() => this.props.navigation.navigate('Viewrequest', { data: data.id })}
+                    <TouchableOpacity activeOpacity={0.5} style={{ padding: 15, flexDirection: 'row', justifyContent: 'space-between', borderBottomColor: 'brown', borderBottomWidth: 1 }}
+                        onPress={() => this.props.navigation.navigate('Viewrequestcounselling', { data: data.id })}
                     >
                         <View>
                             <Text style={{ color: 'white', fontSize: 20 }}>Request{a}</Text>
                             <Text style={{ color: 'white' }}>Date :{data.Daterequested}</Text>
                         </View>
                         <View>
-                            <View style={{ height: 50, width: 50, backgroundColor: 'red', borderRadius: 50, justifyContent: 'center', alignItems: 'center' }}>
+                            <View style={{ height: 50, width: 50, backgroundColor: 'brown', borderRadius: 50, justifyContent: 'center', alignItems: 'center' }}>
                                 <FontAwesome name="arrow-circle-right" size={30} color="white" />
                             </View>
                         </View>
@@ -56,27 +55,25 @@ class Esentialslanding extends Component {
         })
         return (
             <View style={styles.container}>
-                {this.state.requests.length == 0 &&
-                    <View style={{ alignItems: 'center', justifyContent: 'center', marginTop: height / 3 }}>
-                        <Text style={{ color: 'red', fontSize: 20, fontWeight: 'bold' }}>No Pending requests</Text>
-                    </View>
-                }
                 <Spinner visible={this.state.loading} textContent={'Loading...'} textStyle={styles.spinnerTextStyle} />
                 <ScrollView style={{ paddingHorizontal: 5 }}>
                     {requests}
                 </ScrollView>
-                <TouchableOpacity style={{ backgroundColor: 'red', height: 50, justifyContent: 'center', alignItems: 'center' }} onPress={() => this.props.navigation.navigate('SelectEssentials')}>
-                    <View style={{ flexDirection: 'row' }}>
-                        <Ionicons name="add-circle-sharp" size={25} color="white" />
-                        <Text style={{ fontSize: 25, paddingLeft: 4, color: 'white' }}>Add</Text>
-                    </View>
+                {
+                    this.state.requests.length == 0 &&
+                    <TouchableOpacity style={{ backgroundColor: 'brown', height: 50, justifyContent: 'center', alignItems: 'center' }} onPress={() => this.props.navigation.navigate('Findhelpercounselling')}>
+                        <View style={{ flexDirection: 'row' }}>
+                            <Ionicons name="add-circle-sharp" size={25} color="white" />
+                            <Text style={{ fontSize: 25, paddingLeft: 4, color: 'white' }}>Ask</Text>
+                        </View>
 
-                </TouchableOpacity>
+                    </TouchableOpacity>
+                }
             </View>
         )
     }
 }
-export default Esentialslanding
+export default Counsellinglanding
 const styles = StyleSheet.create({
     container: {
         flex: 1,

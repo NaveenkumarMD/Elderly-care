@@ -86,7 +86,7 @@ class Viewrequestmed extends Component {
         })
     }
     render() {
-      //  alert(this.state.url)
+        //  alert(this.state.url)
         var a = 0
         const items = this.state.products.map(data => {
             a += 1
@@ -166,9 +166,12 @@ class Viewrequestmed extends Component {
                         <Image source={{ uri: this.state.url }} style={{ height: 400, width: 300 }} />
                     </View>
                 </ScrollView>
-                <TouchableOpacity style={{ backgroundColor: 'green', padding: 20, justifyContent: 'center', alignItems: 'center' }} onPress={() => this.setState({ modalVisible: true })}>
-                    <Text style={{ color: 'white', fontSize: 20 }}>Completed</Text>
-                </TouchableOpacity>
+                {this.state.status.Accepted &&
+                    <TouchableOpacity style={{ backgroundColor: 'green', padding: 20, justifyContent: 'center', alignItems: 'center' }} onPress={() => this.setState({ modalVisible: true })}>
+                        <Text style={{ color: 'white', fontSize: 20 }}>Completed</Text>
+                    </TouchableOpacity>
+                }
+
             </View>
         )
     }

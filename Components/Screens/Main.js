@@ -90,12 +90,12 @@ class Main extends Component {
                 <View style={styles.one}>
                     <View style={styles.oval1}></View>
                     <View style={styles.oval2}></View>
-                    <TouchableOpacity style={{  marginTop: 35, padding: 20, }}>
-                       
-                        <View style={{alignItems:'flex-end'}}>
+                    <TouchableOpacity style={{  marginTop: 35, padding: 20,flexDirection:'row',justifyContent:'space-between' }}>
+                        <Image source={require('../../assets/logo-circle.png')}  style={{height:50,width:50}}/>
+                        <TouchableOpacity style={{alignItems:'flex-end'}}>
                             <Ionicons name="notifications" size={24} color="white" />
                             <Badge status="warning" containerStyle={{ position: 'absolute', top: -4, right: -4 }} />
-                        </View>
+                        </TouchableOpacity>
                     </TouchableOpacity>
                     <View style={{ flexDirection: 'row', padding: 20,marginVertical:20 }}>
                         <View>
@@ -111,18 +111,22 @@ class Main extends Component {
                     <View style={{ alignItems: 'center' }}>
                         <View style={styles.optionscontainer}>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}>
-                                <View style={{ alignItems: 'center' }}>
+                                <TouchableOpacity style={{ alignItems: 'center',flex:1 }} onPress={()=>this.props.navigation.navigate('History')}>
                                     <Ionicons name="ios-newspaper" size={24} color="white" />
+                                    <TouchableOpacity>
                                     <Text style={{ color: 'white' }}>History</Text>
-                                </View>
-                                <View style={{ alignItems: 'center' }}>
-                                    <Fontisto name="favorite" size={24} color="white" />
-                                    <Text style={{ color: 'white' }}>Favourites</Text>
-                                </View>
-                                <TouchableOpacity style={{ alignItems: 'center' }} onPress={()=>this.props.navigation.navigate('Profile')}>
-                                    <Entypo name="info-with-circle" size={24} color="white" />
+                                    </TouchableOpacity>
+                                    
+                                </TouchableOpacity>
+                                <TouchableOpacity style={{ alignItems: 'center',flex:1 }} onPress={()=>this.props.navigation.navigate('Profile')}>
+                                <Ionicons name="person" size={24} color="white" />
+                                    <Text style={{ color: 'white' }}>Profile</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={{ alignItems: 'center' ,flex:1}}>
+                                <Entypo name="info-with-circle" size={24} color="white" />
                                     <Text style={{ color: 'white' }}>About</Text>
                                 </TouchableOpacity>
+
                             </View>
                         </View>
                     </View>
@@ -137,13 +141,8 @@ class Main extends Component {
                                 </View>
                                 <Text style={{ color: 'white', fontSize: 22, paddingVertical: 10, paddingHorizontal: 10 }}>Essentials</Text>
                             </TouchableOpacity >
-                            <TouchableOpacity  style={{ flexDirection: 'row', paddingTop: 20 }}>
-                                <View style={{ height: 50, width: 50, backgroundColor: 'orange', borderRadius: 50, justifyContent: 'center', alignItems: 'center' }}>
-                                    <MaterialIcons name="home-repair-service" size={24} color="white" />
-                                </View>
-                                <Text style={{ color: 'white', fontSize: 22, paddingVertical: 10, paddingHorizontal: 10 }}>Works</Text>
-                            </TouchableOpacity >
-                            <TouchableOpacity style={{ flexDirection: 'row', paddingTop: 20 }}>
+
+                            <TouchableOpacity style={{ flexDirection: 'row', paddingTop: 20 }} onPress={()=>this.props.navigation.navigate('Counsellinglanding')}>
                                 <View style={{ height: 50, width: 50, backgroundColor: 'brown', borderRadius: 50, justifyContent: 'center', alignItems: 'center' }}>
                                     <MaterialIcons name="phone-in-talk" size={24} color="white" />
                                 </View>
@@ -156,7 +155,7 @@ class Main extends Component {
                                 </View>
                                 <Text style={{ color: 'white', fontSize: 22, paddingVertical: 10, paddingHorizontal: 10 }}>Medicine</Text>
                             </TouchableOpacity >
-                            <TouchableOpacity style={{ flexDirection: 'row', paddingTop: 20 }}>
+                            <TouchableOpacity style={{ flexDirection: 'row', paddingTop: 20 }} onPress={()=>this.props.navigation.navigate("Foodlanding")}>
                                 <View style={{ height: 50, width: 50, backgroundColor: 'green', borderRadius: 50, justifyContent: 'center', alignItems: 'center' }}>
                                     <Ionicons name="md-fast-food-sharp" size={24} color="white" />
                                 </View>
@@ -168,12 +167,19 @@ class Main extends Component {
                                 </View>
                                 <Text style={{ color: 'white', fontSize: 22, paddingVertical: 10, paddingHorizontal: 10 }}>Travel</Text>
                             </TouchableOpacity>
+                            <TouchableOpacity  style={{ flexDirection: 'row', paddingTop: 20 }}>
+                                <View style={{ height: 50, width: 50, backgroundColor: 'orange', borderRadius: 50, justifyContent: 'center', alignItems: 'center' }}>
+                                    <MaterialIcons name="home-repair-service" size={24} color="white" />
+                                </View>
+                                <Text style={{ color: 'white', fontSize: 22, paddingVertical: 10, paddingHorizontal: 10 }}>Works</Text>
+                            </TouchableOpacity >
                             <TouchableOpacity style={{ flexDirection: 'row', paddingTop: 20 }}>
                                 <View style={{ height: 50, width: 50, backgroundColor: 'pink', borderRadius: 50, justifyContent: 'center', alignItems: 'center' }}>
                                     <MaterialIcons name="add" size={24} color="white" />
                                 </View>
                                 <Text style={{ color: 'white', fontSize: 22, paddingVertical: 10, paddingHorizontal: 10 }}>Any other</Text>
                             </TouchableOpacity>
+                            
 
                         </ScrollView>
                         <View>
