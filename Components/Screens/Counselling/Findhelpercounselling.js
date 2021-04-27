@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, Button, FlatList, StyleSheet, TouchableOpacity ,Modal,Alert} from 'react-native'
+import { Text, View, Button, FlatList, StyleSheet, TouchableOpacity, Modal, Alert } from 'react-native'
 import firebase from 'firebase'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import distance from '../../../Functions/Finddistance'
@@ -7,12 +7,13 @@ import sortbydist from '../../../Functions/Sortbydistance'
 import { Rating } from 'react-native-elements'
 import Spinner from 'react-native-loading-spinner-overlay'
 import { sendPushNotification } from '../../../App'
-import {AntDesign} from '@expo/vector-icons'
+import { AntDesign } from '@expo/vector-icons'
+import { ScrollView } from 'react-native-gesture-handler'
 class Findhelpercounselling extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            modalVisible:false,
+            modalVisible: false,
             products: [],
             data: [],
             userdata: '', loading: false,
@@ -20,7 +21,7 @@ class Findhelpercounselling extends Component {
         }
     }
     notify = async () => {
-       
+
         this.state.token.forEach(async data => {
             await sendPushNotification(data, { title: 'Counselling', body: `${this.state.userdata.name} need some emotional support could you please help him` })
         })
@@ -41,18 +42,18 @@ class Findhelpercounselling extends Component {
             Daterequested: date,
             Timerequested: time,
             Requestedpeople: reqpeople,
-            Declined:reqpeople,
+            Declined: reqpeople,
             status: {
                 Requested: true,
                 Accepted: false,
                 Completed: false
             },
-           
+
         }).then(docRef => {
             firebase.firestore().collection('Elders').doc(this.state.userdata.mobile).set({
                 currentessentialsid: docRef.id
-            }, { merge: true }).then(res=>{
-                this.setState({modalVisible:true})
+            }, { merge: true }).then(res => {
+                this.setState({ modalVisible: true })
             })
         })
     }
@@ -80,61 +81,61 @@ class Findhelpercounselling extends Component {
                     tokenarray.push(x.token)
                 }
             })
-        
+
             this.setState({ data: arr.sort(sortbydist), loading: false, token: tokenarray, helpersid: helpersid })
             //console.log(this.state.token)
 
         }
-        ).catch(err=>{
-            this.setState({loading:false})
-            alert(err.message)
+        ).catch(err => {
+            this.setState({ loading: false })
+            //alert(err.message)
         })
 
     }
+
     render() {
+        const helpers=this.state.data.map(data=>{
+            return            (
+                <TouchableOpacity style={styles.item} onPress={() => this.handleviewhelper(data.mobile)}>
+                    <View >
+                        <Text style={styles.title}>{data.name}</Text>
+                        <Text style={{ color: 'brown' }}>{data.distance} km</Text>
+                    </View>
+                    <Rating type='star' ratingCount={5} startingValue={data.rating} imageSize={20} showRating readonly tintColor="black" ratingColor="red" showRating={false} />
 
-        const Item = ({ title, distance, mobile, rating }) => {
-        if(distance<5){
-            (
-            <TouchableOpacity style={styles.item} onPress={() => this.handleviewhelper(mobile)}>
-                <View >
-                    <Text style={styles.title}>{title}</Text>
-                    <Text style={{ color: 'brown' }}>{distance} km</Text>
-                </View>
-                <Rating type='star' ratingCount={5} startingValue={rating} imageSize={20} showRating readonly tintColor="black" ratingColor="red" showRating={false} />
+                </TouchableOpacity>
+            )
+        
+        })
 
-            </TouchableOpacity>
-        )}}
 
-        const renderItem = ({ item }) => (
-            <Item title={item.name} distance={item.distance} mobile={item.mobile} rating={item.rating} />
-        );
+
 
         return (
-            <View style={styles.container }>
+            <View style={styles.container}>
                 <Modal animationType="fade" transparent={true} visible={this.state.modalVisible} onRequestClose={() => {
                     Alert.alert("Modal has been closed.");
                     setModalVisible(!modalVisible);
                 }}
                 >
-                    <TouchableOpacity style={styles.modal} onPress={()=>{
+                    <TouchableOpacity style={styles.modal} onPress={() => {
                         this.setState({
-                            modalVisible:false
+                            modalVisible: false
                         })
                         this.props.navigation.navigate('Counsellinglanding')
-                        
+
                     }}>
                         <View style={styles.modalicon}>
-                            <AntDesign name="checkcircle"  color="green" size={80} />
+                            <AntDesign name="checkcircle" color="green" size={80} />
                         </View>
-                        <Text style={{fontSize:25}}>Success</Text>
-                        
+                        <Text style={{ fontSize: 25 }}>Success</Text>
+
                     </TouchableOpacity>
                 </Modal>
                 <Spinner visible={this.state.loading} textContent={'Loading...'} textStyle={styles.spinnerTextStyle} />
-
-                <FlatList data={this.state.data} renderItem={renderItem} keyExtractor={item => item.mobile} />
-
+                <ScrollView>
+                    {helpers}
+                </ScrollView>
                 <View style={{ alignItems: 'center', padding: 10 }}>
                     <Text style={{ color: 'white', alignSelf: 'center' }}></Text>
                 </View>
@@ -149,19 +150,19 @@ class Findhelpercounselling extends Component {
 }
 export default Findhelpercounselling
 const styles = StyleSheet.create({
-    modal:{
-        
-        justifyContent:'center',
-        alignItems:'center',
-        backgroundColor:'white',
-        height:200,
-        width:200,
-        borderRadius:50,
-        top:'30%',
-        left:'25%'
-        
+    modal: {
+
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'white',
+        height: 200,
+        width: 200,
+        borderRadius: 50,
+        top: '30%',
+        left: '25%'
+
     },
-    modalicon:{
+    modalicon: {
 
     },
     container: {

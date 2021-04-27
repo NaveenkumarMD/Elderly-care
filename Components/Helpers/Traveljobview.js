@@ -35,6 +35,7 @@ class Traveljobview extends Component {
             status: { Accepted: true }, Helperid: this.state.helperdata.mobile, Helpername: this.state.helperdata.name
         }, { merge: true }).then(res => {
             sendPushNotification(this.state.userdata.token, { title: 'Request Accepted', body: `${this.state.helperdata.name} accepted your request` })
+            this.props.navigation.navigate('Acceptedjobs')
         })
     }
     handledecline = () => {

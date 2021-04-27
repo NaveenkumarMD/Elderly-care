@@ -50,7 +50,7 @@ class Helpersignup extends Component {
                         longitude:this.state.longitude
                     }).then(data=>{
                         this.showToastWithGravityAndOffset()
-                        this.props.navigation.navigate('Helpermain')
+                        this.props.navigation.navigate('Login')
                     }).catch(err=>{
                         alert(err.message)
                         this.setState({loading:false})

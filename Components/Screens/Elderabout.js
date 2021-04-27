@@ -18,7 +18,8 @@ class Elderabout extends Component {
         })
     }
     logout=()=>{
-        AsyncStorage.clear()
+        AsyncStorage.removeItem('role')
+        AsyncStorage.removeItem('userdata')
         this.props.navigation.navigate('Elderorhelper')
     }
     render() {
@@ -40,7 +41,7 @@ class Elderabout extends Component {
                             
                         </View>
                         <View>
-                            <Image source={require('../../assets/icon.png')} style={{width:90,height:90}}/>
+                            <Image source={require('../../assets/icon.png')} style={{width:80,height:80,borderRadius:80}}/>
                         </View>
                         
                     </View>

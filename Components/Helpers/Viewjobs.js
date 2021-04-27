@@ -141,6 +141,7 @@ class Viewjobs extends Component {
                 <Spinner visible={this.state.loading} textContent={'Loading...'} textStyle={styles.spinnerTextStyle} />
 
                 <ScrollView>
+     
                     {jobs}
                 </ScrollView>
                 <TouchableOpacity style={{ padding: 10, justifyContent: 'flex-end', alignItems: 'flex-end' }} onPress={() => this.props.navigation.navigate('Acceptedjobs')}>

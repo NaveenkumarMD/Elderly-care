@@ -116,7 +116,7 @@ class Findhelpertravel extends Component {
                         this.setState({
                             modalVisible:false
                         })
-                        this.props.navigation.navigate('Medicinelanding')
+                        this.props.navigation.navigate('Travellanding')
                         
                     }}>
                         <View style={styles.modalicon}>
@@ -133,11 +133,17 @@ class Findhelpertravel extends Component {
                 <View style={{ alignItems: 'center', padding: 10 }}>
                     <Text style={{ color: 'white', alignSelf: 'center' }}></Text>
                 </View>
-                <View>
-                    <TouchableOpacity style={{ backgroundColor: 'dodgerblue', alignItems: 'center', padding: 10 }} onPress={() => this.notify()}>
-                        <Text style={{ color: 'white', fontSize: 20 }}>Request</Text>
-                    </TouchableOpacity>
-                </View>
+                {this.state.data.length>0 ?
+                                <View>
+                                <TouchableOpacity style={{ backgroundColor: 'dodgerblue', alignItems: 'center', padding: 10 }} onPress={() => this.notify()}>
+                                    <Text style={{ color: 'white', fontSize: 20 }}>Request</Text>
+                                </TouchableOpacity>
+                            </View>
+                            :<View style={{alignItems:'center'}}>
+                                <Text style={{color:'white',fontSize:24}}>No Helper found</Text>
+                                </View>
+                }
+
             </View>
         )
     }

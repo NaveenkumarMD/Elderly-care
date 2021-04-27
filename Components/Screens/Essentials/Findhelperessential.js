@@ -90,7 +90,7 @@ class Findhelperessential extends Component {
     render() {
 
         const Item = ({ title, distance, mobile, rating }) => {
-            if(distance<5){
+            if (distance < 5) {
                 return (
                     <TouchableOpacity style={styles.item} onPress={() => this.handleviewhelper(mobile)}>
                         <View >
@@ -98,9 +98,9 @@ class Findhelperessential extends Component {
                             <Text style={{ color: 'red' }}>{distance} km</Text>
                         </View>
                         <Rating type='star' ratingCount={5} startingValue={rating} imageSize={20} showRating readonly tintColor="black" ratingColor="red" showRating={false} />
-    
+
                     </TouchableOpacity>
-    
+
                 )
             }
 
@@ -137,11 +137,14 @@ class Findhelperessential extends Component {
                 <View style={{ alignItems: 'center', padding: 10 }}>
                     <Text style={{ color: 'white', alignSelf: 'center' }}></Text>
                 </View>
-                <View>
-                    <TouchableOpacity style={{ backgroundColor: 'red', alignItems: 'center', padding: 10 }} onPress={() => this.notify()}>
-                        <Text style={{ color: 'white', fontSize: 20 }}>Request</Text>
-                    </TouchableOpacity>
-                </View>
+                {this.state.data.length > 0 &&
+                    <View>
+                        <TouchableOpacity style={{ backgroundColor: 'red', alignItems: 'center', padding: 10 }} onPress={() => this.notify()}>
+                            <Text style={{ color: 'white', fontSize: 20 }}>Request</Text>
+                        </TouchableOpacity>
+                    </View>
+                }
+
             </View>
         )
     }

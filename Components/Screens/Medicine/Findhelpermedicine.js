@@ -135,11 +135,16 @@ class Findhelpermedicine extends Component {
                 <View style={{ alignItems: 'center', padding: 10 }}>
                     <Text style={{ color: 'white', alignSelf: 'center' }}></Text>
                 </View>
-                <View>
-                    <TouchableOpacity style={{ backgroundColor: 'indigo', alignItems: 'center', padding: 10 }} onPress={() => this.notify()}>
-                        <Text style={{ color: 'white', fontSize: 20 }}>Request</Text>
-                    </TouchableOpacity>
-                </View>
+                {this.state.data.length>0 ?
+                                <View>
+                                <TouchableOpacity style={{ backgroundColor: 'indigo', alignItems: 'center', padding: 10 }} onPress={() => this.notify()}>
+                                    <Text style={{ color: 'white', fontSize: 20 }}>Request</Text>
+                                </TouchableOpacity>
+                            </View>
+                            :<View style={{alignItems:'center'}}>
+                                <Text style={{color:'white',fontSize:24}}>No Helper found</Text>
+                                </View>
+                }
             </View>
         )
     }

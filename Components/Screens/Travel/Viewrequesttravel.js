@@ -66,9 +66,10 @@ class Viewrequesttravel extends Component {
                 firebase.firestore().collection('Travelcompleted').add(
                     d
                 ).then(res => {
+                    this.props.navigation.navigate('Main')
                     firebase.firestore().collection('Travel').doc(this.state.id).delete().then(res => {
                         this.setState({ modalVisible: false })
-                        this.props.navigation.navigate('Main')
+                        
                     })
                 })
             })

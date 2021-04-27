@@ -9,7 +9,7 @@ class Helperabout extends Component {
         super(props)
         this.state = {
             addvisible: false,
-            item:'choose',
+            item: 'choose',
             userdata: {
 
             },
@@ -26,49 +26,55 @@ class Helperabout extends Component {
     }
     logout = () => {
         this.setState({ modalVisible: false })
-        AsyncStorage.clear()
+        AsyncStorage.removeItem('role')
+        AsyncStorage.removeItem('userdata')
         this.props.navigation.navigate("Elderorhelper")
     }
     componentDidMount = async () => {
-        var token;
-        await AsyncStorage.getItem('token').then(token1 => {
-            console.log(token1)
-            token = token1
-            this.setState({ token: token1 })
-
-        })
+   
         AsyncStorage.getItem('userdata').then(data => {
 
             var data1 = JSON.parse(data)
 
             if (data1 == null || !data1.aadhar) {
 
-                AsyncStorage.clear()
+                AsyncStorage.removeItem('userdata')
+                AsyncStorage.removeItem('role')
                 this.props.navigation.navigate('Elderorhelper')
             }
 
             this.setState({ userdata: data1, comments: data1.comments, interested: data1.interested })
-            firebase.firestore().collection('Helpers').doc(data1.mobile).set({ token: token }, { merge: true }).then(res => {
-                //alert("done")
+            firebase.firestore().collection('Helpers').doc(data1.mobile).onSnapshot(doc=>{
+                                            
+                AsyncStorage.setItem('userdata',JSON.stringify(doc.data()))
             })
         })
     }
     render() {
-        const reviews = this.state.comments.map(data => {
-            //console.log(data)
+        var reviews = () => {
             return (
-                <View style={{ padding: 10 }}>
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                        <Text style={{ color: 'white', fontSize: 22 }}>{data.name}</Text>
-                        <Rating type='star' ratingCount={5} startingValue={data.rating} imageSize={20} showRating readonly tintColor="black" ratingColor="red" showRating={false} />
+                <View>
+                    <Text>...</Text>
+                </View>
+            )
+        }
+        if (this.state.comments != undefined) {
+            reviews = this.state.comments.map(data => {
+                //console.log(data)
+                return (
+                    <View style={{ padding: 10 }}>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                            <Text style={{ color: 'white', fontSize: 22 }}>{data.name}</Text>
+                            <Rating type='star' ratingCount={5} startingValue={data.rating} imageSize={20} showRating readonly tintColor="black" ratingColor="red" showRating={false} />
+                        </View>
+
+                        <Text style={{ color: 'white', padding: 20 }}>{data.comment}</Text>
+
                     </View>
 
-                    <Text style={{ color: 'white', padding: 20 }}>{data.comment}</Text>
-
-                </View>
-
-            )
-        })
+                )
+            })
+        }
         return (
             <View style={styles.container}>
                 <Modal animationType="scroll" transparent={true} visible={this.state.modalVisible} >
@@ -94,14 +100,19 @@ class Helperabout extends Component {
                         <Text style={{ color: 'white', color: '#ff7e07' }}>+91-{this.state.userdata.mobile}</Text>
                     </View>
                     <Text style={{ color: '#a8a8a8', fontSize: 24, padding: 5 }}>Intersted works</Text>
-                    <View style={{ paddingVertical: 30, padding: 10 }}>
-                        {this.state.interested.includes('Essentials') ? <Essentials /> : null}
-                        {this.state.interested.includes('Food') ? <Food /> : null}
-                        {this.state.interested.includes('Travel') ? <Travel /> : null}
-                        {this.state.interested.includes('Medicine') ? <Medicine /> : null}
-                        {this.state.interested.includes('Counselling') ? <Counselling /> : null}
-                        {this.state.interested.includes('Works') ? <Domestic /> : null}
+                    {this.state.interested != undefined &&
+                        <View style={{ paddingTop: 30, padding: 10 }}>
+                            {this.state.interested.includes('Essentials') ? <Essentials /> : null}
+                            {this.state.interested.includes('Food') ? <Food /> : null}
+                            {this.state.interested.includes('Travel') ? <Travel /> : null}
+                            {this.state.interested.includes('Medicine') ? <Medicine /> : null}
+                            {this.state.interested.includes('Counselling') ? <Counselling /> : null}
+                            {this.state.interested.includes('Works') ? <Domestic /> : null}
+                        </View>}
+                    <View>
+                    <View style={{padding:5}}>
                         {this.state.addvisible &&
+                        
                             <View style={{ backgroundColor: 'white', paddingHorizontal: 80, padding: 10, borderRadius: 20, margin: 5 }}>
                                 <Picker selectedValue={this.state.item} onValueChange={(e) => this.setState({ item: e })}
                                     style={{ height: 33, color: 'black', width: 150, flex: 1, paddingLeft: 10 }} itemStyle={{ backgroundColor: 'black', color: 'red' }}>
@@ -115,31 +126,43 @@ class Helperabout extends Component {
                             </View>
                         }
 
-                        <TouchableOpacity style={{ alignItems: 'center', borderWidth: 2, borderColor: 'black', padding: 20, margin: 5, borderRadius: 20, backgroundColor: 'blue' }}
-                        onPress={()=>{
-                            if(!this.state.addvisible){
-                                return this.setState({addvisible:true})
-                            }
-                            if(this.state.item=='choose'|| this.state.interested.includes(this.state.item)){
-                                alert("Invalid selection")
-                            }
-                            else{
-                                var interested=this.state.interested
-                                firebase.firestore().collection('Helpers').doc(this.state.userdata.mobile).set({
-                                    interested:[...interested,this.state.item]
-                                },{merge:true}).then(res=>{
-                                    alert("Successfully added")
-                                    this.props.navigation.navigate('Helpermain')
-                                })
-                            }
-                        }}
+                        <TouchableOpacity style={{ alignItems: 'center', borderWidth: 2, borderColor: 'black', padding:20, margin: 5, borderRadius: 20, backgroundColor: 'blue',paddingBottom:20 }}
+                            onPress={() => {
+                                if (!this.state.addvisible) {
+                                    return this.setState({ addvisible: true })
+                                }
+
+                                else {
+                                    var interested=[]
+                                    if(this.state.interested!=undefined){
+                                        if(this.state.interested.includes(this.state.item)){
+                                            interested=[...this.state.interested]
+                                        }
+                                        else{
+                                            interested=[...this.state.interested,this.state.item]
+                                        }
+                                        
+                                    }
+                                    else{
+                                        interested=[this.state.item]
+                                    }
+                                    firebase.firestore().collection('Helpers').doc(this.state.userdata.mobile).set({
+                                        interested
+                                    }, { merge: true }).then(res => {
+                                        this.setState({interested:interested})
+                                        alert("Successfully added")
+                                        firebase.firestore().collection('Helpers').doc(this.state.userdata.mobile).onSnapshot(doc=>{
+                                            
+                                            AsyncStorage.setItem('userdata',JSON.stringify(doc.data()))
+                                        })
+                                        this.setState({addvisible:false})
+                                    })
+                                }
+                            }}
                         >
                             <Text style={{ color: 'white', fontSize: 16 }}>Add</Text>
                         </TouchableOpacity>
-
-
-
-
+                        </View>
                     </View>
 
 
@@ -159,26 +182,32 @@ class Helperabout extends Component {
 
                         </View>
                     </View>
-                    <View >
-                        <Text style={{ color: '#a8a8a8', fontSize: 22, fontWeight: 'bold' }}>Reviews</Text>
-                        <View style={{ marginBottom: 0 }}>
-                            {reviews}
+                    {this.state.comments != undefined &&
+                        <View >
+                            <Text style={{ color: '#a8a8a8', fontSize: 22, fontWeight: 'bold' }}>Reviews</Text>
+                            <View style={{ marginBottom: 0 }}>
 
-                        </View>
+                                {reviews}
 
-                    </View>
+                            </View>
+
+                        </View>}
                     <View style={{ paddingHorizontal: 30 }}>
 
 
-                        <TouchableOpacity style={{ backgroundColor: 'red', borderRadius: 30, paddingHorizontal: 15, paddingVertical: 10, flexDirection: 'row', justifyContent: 'space-between' }} onPress={() => this.setState({ modalVisible: true })}>
-                            <Text style={{ color: 'white', fontSize: 20, paddingHorizontal: 30 }}>logout</Text>
-                            <MaterialIcons name="logout" size={24} color="white" style={{ paddingHorizontal: 30 }} />
 
-                        </TouchableOpacity>
                     </View>
 
                 </ScrollView>
+                <View style={{paddingHorizontal:40}}>
 
+            
+                <TouchableOpacity style={{ backgroundColor: 'red', borderRadius: 30, paddingHorizontal: 15, paddingVertical: 10, flexDirection: 'row', justifyContent: 'space-between',marginBottom:20,marginTop:20 }} onPress={() => this.setState({ modalVisible: true })}>
+                    <Text style={{ color: 'white', fontSize: 20, paddingHorizontal: 30 }}>logout</Text>
+                    <MaterialIcons name="logout" size={24} color="white" style={{ paddingHorizontal: 30 }} />
+
+                </TouchableOpacity>
+                </View>
             </View>
         )
     }

@@ -28,7 +28,7 @@ class Helpermain extends Component {
     componentDidMount = async () => {
         var token;
         await AsyncStorage.getItem('token').then(token1 => {
-            //console.log(token1)
+            console.log(token1)
             // alert(token1)
             token = token1
             this.setState({ token: token1 })
@@ -38,14 +38,15 @@ class Helpermain extends Component {
 
                 if (data1 == null || !data1.aadhar) {
 
-                    AsyncStorage.clear()
+                    AsyncStorage.removeItem('userdata')
+                    AsyncStorage.removeItem('role')
                     this.props.navigation.navigate('Elderorhelper')
                 }
 
                 this.setState({ userdata: data1, comments: data1.comments, interested: data1.interested })
                 //alert(token1)
-                if (token1 != null) {
-                    firebase.firestore().collection('Helpers').doc(data1.mobile).set({ token: token1, }, { merge: true }).then(res => {
+                if (token != null) {
+                    firebase.firestore().collection('Helpers').doc(data1.mobile).set({ token: token, }, { merge: true }).then(res => {
                         //alert("done")
                     })
                 }

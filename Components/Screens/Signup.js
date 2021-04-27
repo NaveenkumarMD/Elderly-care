@@ -95,6 +95,7 @@ class Signup extends Component {
                         }).then(res=>{
                             this.setState({loading:false})
                             this.showToastWithGravityAndOffset()
+                            this.props.navigation.navigate('Login')
                         }).catch(err=>{
                             this.setState({loading:false})
                             alert(err.message)

@@ -34,6 +34,7 @@ class Foodjobview extends Component {
         firebase.firestore().collection(this.state.type).doc(this.state.id).set({
             status: { Accepted: true }, Helperid: this.state.helperdata.mobile, Helpername: this.state.helperdata.name
         }, { merge: true }).then(res => {
+            this.props.navigation.navigate('Acceptedjobs')
             sendPushNotification(this.state.userdata.token, { title: 'Request Accepted', body: `${this.state.helperdata.name} accepted your request` })
         })
     }

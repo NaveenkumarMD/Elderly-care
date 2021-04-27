@@ -48,7 +48,13 @@ class Viewrequest extends Component {
             var array = []
             console.log(doc.data().comments)
             var x = doc.data().comments
-            array = [...doc.data().comments, data]
+            if(doc.data().comments!=undefined){
+                array = [...doc.data().comments, data]
+            }
+            else{
+                array=[data]
+            }
+            
             firebase.firestore().collection('Helpers').doc(this.state.data.Helperid).set({
                 comments: array
             }, { merge: true }).then(res => {

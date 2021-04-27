@@ -1,16 +1,16 @@
 {
   "expo": {
-    "name": "contest",
+    "name": "Elderly care",
     "slug": "contest",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/logo-circle.png",
     "notification":{
       "androidMode":"default",
-      "icon":"./assets/icon.png"
+      "icon":"./assets/logo-circle.png"
     },
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/logo-circle.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -24,8 +24,11 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.Naveenkumar.ElderlyCare",
+      "versionCode": 1,
+
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/logo-circle.png",
         "backgroundColor": "#FFFFFF"
       }
     },

@@ -111,18 +111,18 @@ class Main extends Component {
                     <View style={{ alignItems: 'center' }}>
                         <View style={styles.optionscontainer}>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}>
-                                <TouchableOpacity style={{ alignItems: 'center',flex:1 }} onPress={()=>this.props.navigation.navigate('History')}>
+                                <TouchableOpacity style={{ alignItems: 'center',flex:1,height:100 }} onPress={()=>this.props.navigation.navigate('History')}>
                                     <Ionicons name="ios-newspaper" size={24} color="white" />
-                                    <TouchableOpacity>
+                                    <TouchableOpacity onPress={()=>this.props.navigation.navigate('History')}>
                                     <Text style={{ color: 'white' }}>History</Text>
                                     </TouchableOpacity>
                                     
                                 </TouchableOpacity>
-                                <TouchableOpacity style={{ alignItems: 'center',flex:1 }} onPress={()=>this.props.navigation.navigate('Profile')}>
+                                <TouchableOpacity style={{ alignItems: 'center',flex:1,height:100 }} onPress={()=>this.props.navigation.navigate('Profile')}>
                                 <Ionicons name="person" size={24} color="white" />
-                                    <Text style={{ color: 'white' }}>Profile</Text>
+                                    <Text style={{ color: 'white' }} onPress={()=>this.props.navigation.navigate('Profile')}>Profile</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity style={{ alignItems: 'center' ,flex:1}}>
+                                <TouchableOpacity style={{ alignItems: 'center' ,flex:1,height:100}}>
                                 <Entypo name="info-with-circle" size={24} color="white" />
                                     <Text style={{ color: 'white' }}>About</Text>
                                 </TouchableOpacity>

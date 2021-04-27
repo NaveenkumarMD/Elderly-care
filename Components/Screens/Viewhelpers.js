@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, ScrollView, Image } from 'react-native'
 import Spinner from 'react-native-loading-spinner-overlay'
 import firebase from 'firebase'
 import { MaterialIcons, Entypo, Octicons } from '@expo/vector-icons'
-import {Rating} from 'react-native-elements'
+import { Rating } from 'react-native-elements'
 class Viewhelpers extends Component {
     constructor(props) {
         super(props)
@@ -18,34 +18,42 @@ class Viewhelpers extends Component {
                     rating: 3,
                     comments: 'faregrege'
                 }
-                    ]
-            }
+            ]
+        }
     }
     componentDidMount = async () => {
         await this.setState({ id: this.props.route.params.id })
         await firebase.firestore().collection('Helpers').doc(this.state.id).get().then(async doc => {
             //console.log(doc.data().comments)
-            await this.setState({ userdata: doc.data(), loading: false ,comments:doc.data().comments})
+            await this.setState({ userdata: doc.data(), loading: false, comments: doc.data().comments })
         })
     }
     render() {
+        var reviews = () => {
+            return (
+                <View>
+                    <Text></Text>
+                </View>
+            )
+        }
+        if (this.state.comments != undefined) {
+            const reviews = this.state.comments.map(data => {
+                console.log(data)
+                return (
+                    <View style={{ padding: 10 }}>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                            <Text style={{ color: 'white', fontSize: 22 }}>{data.name}</Text>
+                            <Rating type='star' ratingCount={5} startingValue={data.rating} imageSize={20} showRating readonly tintColor="black" ratingColor="red" showRating={false} />
+                        </View>
 
-       // console.log(this.state.comments)
-       const reviews = this.state.comments.map(data=>{
-           console.log(data)
-           return(
-               <View style={{padding:10}}>
-                   <View style={{flexDirection:'row',justifyContent:'space-between'}}>
-                   <Text style={{color:'white',fontSize:22}}>{data.name}</Text>
-                   <Rating type='star' ratingCount={5} startingValue={data.rating} imageSize={20} showRating readonly  tintColor="black" ratingColor="red" showRating={false}/>
-                   </View>
-                   
-                   <Text style={{color:'white',padding:20}}>{data.comment}</Text>
+                        <Text style={{ color: 'white', padding: 20 }}>{data.comment}</Text>
 
-               </View>
+                    </View>
 
-           )
-       })
+                )
+            })
+        }
+
 
         return (
             <View style={styles.container}>
@@ -103,13 +111,16 @@ class Viewhelpers extends Component {
                             </View>
                         </View>
                     </View>
-                    <View >
-                        <Text style={{ color: 'white', fontSize: 22, fontWeight: 'bold' }}>Reviews</Text>
-                        <View style={{marginBottom:30}}>
-                        {reviews}
+                    {this.state.comments != undefined &&
+                        <View >
+                            <Text style={{ color: 'white', fontSize: 22, fontWeight: 'bold' }}>Reviews</Text>
+                            <View style={{ marginBottom: 30 }}>
+                                {reviews}
+                            </View>
+
                         </View>
-                  
-                    </View>
+                    }
+
                 </ScrollView>
             </View>
         )

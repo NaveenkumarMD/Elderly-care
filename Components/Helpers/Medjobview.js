@@ -36,6 +36,7 @@ class Medjobview extends Component {
         }, { merge: true }).then(res => {
             sendPushNotification(this.state.userdata.token, { title: 'Request Accepted', body: `${this.state.helperdata.name} accepted your request` })
         })
+        this.props.navigation.navigate('Acceptedjobs')
     }
     handledecline = () => {
         firebase.firestore().collection(this.state.type).doc(this.state.id).set({
